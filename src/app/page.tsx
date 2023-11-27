@@ -1,4 +1,4 @@
-import styles from './page.module.css';
+import './styles/global.css';
 import Main from './main'
 
 const Root: React.FC = () => {

@@ -1,11 +1,19 @@
 "use client";
-import React from "react";
-import CodeMirror from '@uiw/react-codemirror'
+import React, { useState } from "react";
+import Resizable from "./components/resizable";
+import CodeEditor from "./components/codeEditor";
+import Console from './components/console'
+import './styles/main.css';
 
 const Home: React.FC = () => {
     return (
         <div className="main-container">
-            <CodeMirror></CodeMirror>
+            <div className="main-inner-container">
+                <Resizable
+                    leftPanel={<CodeEditor />}
+                    rightPanel={<Console />}
+                />
+            </div>
         </div>
     )
 }

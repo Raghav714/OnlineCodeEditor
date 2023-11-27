@@ -1,0 +1,16 @@
+.main-container {
+    background-color: aqua;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    justify-content: center;
+}
+
+.main-inner-container {
+    background-color: aqua;
+    height: 90%;
+    width: 90%;
+    display: flex;
+}
