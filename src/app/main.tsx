@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Resizable from "./components/resizable";
 import CodeEditor from "./components/codeEditor";
 import Console from './components/console'

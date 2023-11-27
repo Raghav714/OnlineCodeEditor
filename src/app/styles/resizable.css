@@ -5,8 +5,16 @@
     background-color: antiquewhite;
 }
 
+.editor-container {
+    height: 100%
+}
+
 .resize {
     cursor: col-resize;
     width: 5px;
     background-color: rgb(199, 115, 13);
+}
+
+.output-container {
+    height: 100%;
 }
