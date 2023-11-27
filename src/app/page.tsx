@@ -1,9 +1,10 @@
-import styles from './page.module.css'
+import styles from './page.module.css';
+import Main from './main'
 
-export default function Home() {
+const Root: React.FC = () => {
   return (
-    <div>
-      Hello World
-    </div>
+    <Main />
   )
 }
+
+export default Root;
