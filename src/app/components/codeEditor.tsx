@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, use } from "react";
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from "@codemirror/lang-python";
-import Resizable from "./resizable";
+// import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import { nord } from '@uiw/codemirror-theme-nord';
 import "../styles/codeEditor.css"
 
 interface CodeEditorProps {
@@ -18,8 +19,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ code, setCode }) => {
                 value={code}
                 onChange={setCode}
                 extensions={[python()]}
-                theme="light"
                 height="100%"
+                theme={nord}
                 basicSetup={{
                     lineNumbers: true,
                     allowMultipleSelections: true,

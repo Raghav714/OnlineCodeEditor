@@ -1,2 +1,4 @@
-for i in range(20):
-   print(i)
+from collections import dequew
+queue = deque()
+queue.append(1)
+print(queue)
