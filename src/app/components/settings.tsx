@@ -23,7 +23,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen }) => {
             <div className="settings-modal">
                 <h1>Settings</h1>
                 <div className="settings-modal-inner">
-                    <button className="submit-button" onClick={handleToggleMinimal}>ToggleMinimal</button>
+                    <button className="submit-button" onClick={handleToggleMinimal}>Toggle Minimal Mode</button>
                     <div className="theme-dropdown-container">
                         <label htmlFor="theme-select">Choose a theme: </label>
                         <select className="theme-dropdown" id="theme-select" value={theme} onChange={handleThemeChange}>
