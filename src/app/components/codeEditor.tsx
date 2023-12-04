@@ -44,6 +44,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         runCode();
         return true;
     };
+
     const customKeymap = keymap.of([{
         key: "Shift-Enter",
         run: runCodeCommand,

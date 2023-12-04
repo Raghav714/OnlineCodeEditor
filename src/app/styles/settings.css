@@ -20,6 +20,7 @@
     width: 50%;
     max-width: 480px;
     height: 70%;
+    padding: 3em 2em;
     background-color: rgb(232, 232, 232);
     z-index: 2;
 
@@ -27,4 +28,41 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.settings-modal>h1 {
+    height: 10%;
+    margin-bottom: 1em;
+}
+
+.settings-modal-inner {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.settings-key-mappings {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-key-mappings>h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.settings-modal .key-mapping {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5em 0em;
+}
+
+.settings-modal h3 {
+    font-weight: 500;
+    font-size: 16px;
 }

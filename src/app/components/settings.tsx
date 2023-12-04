@@ -21,17 +21,44 @@ const Settings: React.FC<SettingsProps> = ({ isOpen }) => {
     return (
         <div className={`settings-container ${isOpen ? `display` : `hide`}`}>
             <div className="settings-modal">
-                <h1>Settings!</h1>
-                <button className="submit-button" onClick={handleToggleMinimal}>ToggleMinimal</button>
-                <div>
-                    <label htmlFor="theme-select">Choose a theme:</label>
-                    <select className="theme-dropdown" id="theme-select" value={theme} onChange={handleThemeChange}>
-                        <option value="nord">Nord</option>
-                        <option value="vscode">VSCode</option>
-                        <option value="tokyoNightStorm">Tokyo Night Storm</option>
-                        <option value="sublime">Sublime</option>
-                        <option value="quietlight">Quietlight</option>
-                    </select>
+                <h1>Settings</h1>
+                <div className="settings-modal-inner">
+                    <button className="submit-button" onClick={handleToggleMinimal}>ToggleMinimal</button>
+                    <div className="theme-dropdown-container">
+                        <label htmlFor="theme-select">Choose a theme: </label>
+                        <select className="theme-dropdown" id="theme-select" value={theme} onChange={handleThemeChange}>
+                            <option value="nord">Nord</option>
+                            <option value="vscode">VSCode</option>
+                            <option value="tokyoNightStorm">Tokyo Night Storm</option>
+                            <option value="sublime">Sublime</option>
+                            <option value="quietlight">Quietlight</option>
+                        </select>
+                    </div>
+                    <div className="language-dropdown-container">
+                        <label htmlFor="language-select">Choose a language: </label>
+                        <select className="language-dropdown" id="language-select">
+                            <option value="nord">Python</option>
+                        </select>
+                    </div>
+                    <div className="settings-key-mappings">
+                        <h2>Key Mappings</h2>
+                        <div className="key-mapping">
+                            <h3>Run Code</h3>
+                            <h3>Shift + Enter</h3>
+                        </div>
+                        <div className="key-mapping">
+                            <h3>Settings</h3>
+                            <h3>Esc</h3>
+                        </div>
+                        <div className="key-mapping">
+                            <h3>Toggle Minimal Mode</h3>
+                            <h3>NaaN</h3>
+                        </div>
+                        <div className="key-mapping">
+                            <h3>Clear Console</h3>
+                            <h3>NaaN</h3>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
