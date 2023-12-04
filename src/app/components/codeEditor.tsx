@@ -50,7 +50,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 basicSetup={{
                     lineNumbers: true,
                     allowMultipleSelections: true,
-                    tabSize: 3,
+                    tabSize: 6,
                 }}
             />
         </div>

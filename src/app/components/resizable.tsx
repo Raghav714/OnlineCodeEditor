@@ -39,7 +39,8 @@ const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
             <div className="editor-container" style={{ width: width }}>
                 {leftPanel}
             </div>
-            <div className="resize" onMouseDown={handleMouseDown}></div>
+            <div className="resize" onMouseDown={handleMouseDown} />
+
             <div className="output-container">
                 {rightPanel}
             </div>

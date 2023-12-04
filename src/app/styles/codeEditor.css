@@ -1,4 +1,3 @@
-/* norp bg-color: #303444; */
 .code-editor-container {
     height: 100%;
     display: flex;
@@ -14,7 +13,6 @@
 }
 
 .run-button {
-    background-color: aquamarine;
     color: #3f4046;
     cursor: pointer;
     font-size: 14px;

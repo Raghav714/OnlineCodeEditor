@@ -15,8 +15,8 @@
 
 .resize {
     cursor: col-resize;
-    width: 5px;
-    background-color: rgb(199, 115, 13);
+    width: 4px;
+    background-color: rgb(126, 75, 14);
 }
 
 .output-container {
@@ -29,7 +29,6 @@
 /*!***************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[3]!./src/app/styles/codeEditor.css ***!
   \***************************************************************************************************************************************************************************************************************************************************************************/
-/* norp bg-color: #303444; */
 .code-editor-container {
     height: 100%;
     display: flex;
@@ -45,7 +44,6 @@
 }
 
 .run-button {
-    background-color: aquamarine;
     color: #3f4046;
     cursor: pointer;
     font-size: 14px;
@@ -71,7 +69,6 @@
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[3]!./src/app/styles/main.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
 .main-container {
-    background-color: aqua;
     height: 100%;
     width: 100%;
     display: flex;
@@ -81,15 +78,15 @@
 }
 
 .main-inner-container {
-    background-color: aqua;
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     display: flex;
 }
 
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[12].oneOf[12].use[3]!./src/app/styles/global.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************/
+/* norp bg-color: #303444; */
 * {
   margin: 0;
   padding: 0;
@@ -98,7 +95,7 @@
 }
 
 .submit-button {
-  background-color: aliceblue;
+  background-color: rgb(217, 225, 232);
   padding: 0.6em 1.2em;
   border-radius: 3px;
   margin: 0em 1em;

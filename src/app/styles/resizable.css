@@ -12,8 +12,8 @@
 
 .resize {
     cursor: col-resize;
-    width: 5px;
-    background-color: rgb(199, 115, 13);
+    width: 4px;
+    background-color: rgb(126, 75, 14);
 }
 
 .output-container {

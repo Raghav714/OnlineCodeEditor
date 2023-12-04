@@ -1,3 +1,4 @@
+/* norp bg-color: #303444; */
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +7,7 @@
 }
 
 .submit-button {
-  background-color: aliceblue;
+  background-color: rgb(217, 225, 232);
   padding: 0.6em 1.2em;
   border-radius: 3px;
   margin: 0em 1em;

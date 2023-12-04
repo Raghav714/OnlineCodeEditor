@@ -1,5 +1,4 @@
 .main-container {
-    background-color: aqua;
     height: 100%;
     width: 100%;
     display: flex;
@@ -9,8 +8,7 @@
 }
 
 .main-inner-container {
-    background-color: aqua;
-    height: 90%;
-    width: 90%;
+    height: 100%;
+    width: 100%;
     display: flex;
 }
