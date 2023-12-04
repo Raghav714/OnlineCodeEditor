@@ -1,25 +1,19 @@
 "use client";
 import React, { useState, useEffect, createContext } from "react";
+import { MinimalContext, ThemeContext } from "./resources/contexts";
 import Resizable from "./components/resizable";
 import CodeEditor from "./components/codeEditor";
 import Console from './components/console';
 import Settings from './components/settings';
 import './styles/main.css';
 
-interface MinimalContextType {
-    value: boolean,
-    setValue: (value: boolean) => void;
-}
 
-export const MinimalContext = createContext<MinimalContextType>({
-    value: false,
-    setValue: () => { }
-})
 
 const Home: React.FC = () => {
     const [consoleOutput, setConsoleOutput] = useState<string>("");
     const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
     const [isMinimal, setIsMinimal] = useState<boolean>(false)
+    const [theme, setTheme] = useState<string>("nord")
 
 
     useEffect(() => {
@@ -40,21 +34,25 @@ const Home: React.FC = () => {
                 value: isMinimal,
                 setValue: setIsMinimal
             }} >
-                <Settings
-                    isOpen={isSettingsOpen}
-                />
-                <div className="main-inner-container">
-
-                    <Resizable
-                        leftPanel={<CodeEditor
-                            setOutput={setConsoleOutput}
-                        />}
-                        rightPanel={<Console
-                            output={consoleOutput}
-                        />}
+                <ThemeContext.Provider value={{
+                    value: theme,
+                    setValue: setTheme
+                }} >
+                    <Settings
+                        isOpen={isSettingsOpen}
                     />
+                    <div className="main-inner-container">
+                        <Resizable
+                            leftPanel={<CodeEditor
+                                setOutput={setConsoleOutput}
+                            />}
+                            rightPanel={<Console
+                                output={consoleOutput}
+                            />}
+                        />
 
-                </div>
+                    </div>
+                </ThemeContext.Provider>
             </MinimalContext.Provider>
         </div>
     )

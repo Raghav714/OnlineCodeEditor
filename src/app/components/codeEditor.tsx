@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView } from '@uiw/react-codemirror';
-import { MinimalContext } from "../main";
+import { MinimalContext, ThemeContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
-// import { vscodeDark } from '@uiw/codemirror-theme-vscode';
-import { nord } from '@uiw/codemirror-theme-nord';
+import ThemeMap from "../resources/themes";
 import "../styles/codeEditor.css"
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -15,7 +14,12 @@ interface CodeEditorProps {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [code, setCode] = useState<string>("");
-    const { value: isMinimal, setValue: setIsMinimal } = useContext(MinimalContext);
+    const { value: isMinimal } = useContext(MinimalContext);
+    const { value: theme } = useContext(ThemeContext);
+
+    useEffect(() => {
+        console.log(theme)
+    }, [])
 
     const runCode = async () => {
         try {
@@ -47,6 +51,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     }]);
 
 
+
     return (
         <div className="code-editor-container">
             <div className={`editor-navbar-container ${isMinimal ? 'hidden' : 'visible'}`}>
@@ -60,11 +65,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 onChange={setCode}
                 extensions={[python(), customKeymap]}
                 height="100%"
-                theme={nord}
+                theme={ThemeMap[theme]}
                 basicSetup={{
                     lineNumbers: true,
                     allowMultipleSelections: true,
-                    tabSize: 6,
+                    tabSize: 5,
                 }}
             />
         </div>

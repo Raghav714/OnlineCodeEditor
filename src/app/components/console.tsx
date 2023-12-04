@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
+import { ThemeContext } from '../resources/contexts';
+import ThemeMap from "../resources/themes";
 import '../styles/console.css';
-import { nord } from '@uiw/codemirror-theme-nord';
+
 
 
 interface ConsoleOutputProps {
     output: string
 }
 const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
+    const { value: theme, setValue: setTheme } = useContext(ThemeContext);
 
     return (
         <div className="console-container">
@@ -16,7 +19,7 @@ const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
                 value={output}
                 height="100%"
                 width="100%"
-                theme={nord}
+                theme={ThemeMap[theme]}
                 basicSetup={{
                     lineNumbers: false,
 

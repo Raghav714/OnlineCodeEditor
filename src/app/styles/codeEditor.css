@@ -25,4 +25,5 @@
 
 .editor {
     height: 100% !important;
+    word-spacing: 0.06ch;
 }
