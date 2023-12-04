@@ -2,7 +2,7 @@ const fs = require('fs');
 const express = require('express')
 const { spawnSync } = require('child_process');
 const app = express()
-const port = 8000
+const port = process.env.PORT || 8000
 const cors = require('cors');
 
 app.use(cors());
@@ -14,7 +14,7 @@ const router = express.Router();
 app.post('/', (req, res) => {
     const { code } = req.body;
 
-    const tempFilePath = 'tempPythonCode.py';
+    const tempFilePath = '/tmp/tempPythonCode.py';
     fs.writeFileSync(tempFilePath, code);
     const pythonProcess = spawnSync('python3', [tempFilePath]);
 
@@ -24,6 +24,9 @@ app.post('/', (req, res) => {
     } else {
         res.status(200).json({ output: pythonProcess.stdout.toString() });
     }
+});
+app.get('/', (req, res) => {
+    res.status(200).send("jello")
 });
 
 app.listen(port, () => {

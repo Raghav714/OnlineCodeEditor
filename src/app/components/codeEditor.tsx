@@ -5,6 +5,8 @@ import { python } from "@codemirror/lang-python";
 import { nord } from '@uiw/codemirror-theme-nord';
 import "../styles/codeEditor.css"
 
+const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
+
 interface CodeEditorProps {
     setOutput: (code: string) => void;
 }
@@ -21,12 +23,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 },
                 body: JSON.stringify({ code: code })
             }
-            let response = await fetch(`http://localhost:8000/`, requestOptions);
+            let response = await fetch(`${NEXT_PUBLIC_API_URL}`, requestOptions);
             let data = await response.json()
             if (data && data.output) {
                 setOutput(data.output);
             }
-            console.log(data);
         } catch (error) {
             console.log(error);
         }
