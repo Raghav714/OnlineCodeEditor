@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef, use } from "react";
-import CodeMirror from '@uiw/react-codemirror';
+import React, { useState, useEffect, useRef, useContext } from "react";
+import CodeMirror, { keymap, Command, EditorView } from '@uiw/react-codemirror';
+import { MinimalContext } from "../main";
 import { python } from "@codemirror/lang-python";
 // import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { nord } from '@uiw/codemirror-theme-nord';
@@ -11,8 +12,10 @@ interface CodeEditorProps {
     setOutput: (code: string) => void;
 }
 
+
 const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [code, setCode] = useState<string>("");
+    const { value: isMinimal, setValue: setIsMinimal } = useContext(MinimalContext);
 
     const runCode = async () => {
         try {
@@ -33,10 +36,20 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         }
     }
 
+    const runCodeCommand: Command = (view: EditorView) => {
+        runCode();
+        return true;
+    };
+    const customKeymap = keymap.of([{
+        key: "Shift-Enter",
+        run: runCodeCommand,
+        preventDefault: true,
+    }]);
+
 
     return (
         <div className="code-editor-container">
-            <div className="editor-navbar-container">
+            <div className={`editor-navbar-container ${isMinimal ? 'hidden' : 'visible'}`}>
                 <button className="submit-button run-button" onClick={runCode}>
                     Run
                 </button>
@@ -45,7 +58,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 className="editor"
                 value={code}
                 onChange={setCode}
-                extensions={[python()]}
+                extensions={[python(), customKeymap]}
                 height="100%"
                 theme={nord}
                 basicSetup={{

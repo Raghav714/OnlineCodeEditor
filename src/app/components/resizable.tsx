@@ -38,7 +38,6 @@ const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
     };
 
     return (
-
         <div className="resizable-container"
             onMouseMove={mouseDown ? handleMouseMove : undefined}
             onMouseUp={handleMouseUp}
