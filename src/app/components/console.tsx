@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-const Console: React.FC = () => {
+
+interface ConsoleOutputProps {
+    output: string
+}
+const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
+    // useEffect(() => {
+    //     console.log(val)
+    // }, [])
     return (
         <div className="console-container">
-            Console
+            {output}
         </div>
     )
 }
