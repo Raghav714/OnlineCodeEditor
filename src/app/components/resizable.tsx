@@ -7,7 +7,7 @@ interface ResizableProps {
 }
 
 const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
-    const [width, setWidth] = useState<number>(100);
+    const [width, setWidth] = useState<number>(400);
     const [mouseDown, setMouseDown] = useState<boolean>(false);
     const [startX, setStartX] = useState<number>(0);
     const [startWidth, setStartWidth] = useState<number>(100);
