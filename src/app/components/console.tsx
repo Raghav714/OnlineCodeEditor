@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import CodeMirror from '@uiw/react-codemirror';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import '../styles/console.css';
 import { nord } from '@uiw/codemirror-theme-nord';
 
@@ -19,7 +19,11 @@ const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
                 theme={nord}
                 basicSetup={{
                     lineNumbers: false,
+
                 }}
+                extensions={[
+                    EditorView.lineWrapping
+                ]}
                 readOnly={true}
                 editable={false}
             />

@@ -4,6 +4,7 @@
   padding: 0;
   border: 0;
   font-family: Arial, Helvetica, sans-serif;
+  box-sizing: border-box;
 }
 
 .submit-button {

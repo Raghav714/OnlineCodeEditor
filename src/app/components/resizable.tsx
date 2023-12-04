@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useRef, useEffect } from "react";
 import '../styles/resizable.css'
 
 interface ResizableProps {
@@ -7,22 +7,29 @@ interface ResizableProps {
 }
 
 const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
-    const [width, setWidth] = useState<number>(400);
+    //Width of leftPanel as percent
+    const [width, setWidth] = useState<number>(50);
     const [mouseDown, setMouseDown] = useState<boolean>(false);
     const [startX, setStartX] = useState<number>(0);
-    const [startWidth, setStartWidth] = useState<number>(100);
+    const [startWidth, setStartWidth] = useState<number>(0);
+
+    useEffect(() => {
+        setStartWidth(window.innerWidth * (width / 100));
+    }, [])
+
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         setStartX(e.clientX);
-        setStartWidth(width);
+        setStartWidth(window.innerWidth * (width / 100));
         setMouseDown(true);
         e.preventDefault();
     };
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (mouseDown) {
-            const newWidth = startWidth + (e.clientX - startX);
-            setWidth(newWidth > 0 ? newWidth : 0);
+            const deltaX = e.clientX - startX;
+            const newWidth = startWidth + deltaX;
+            setWidth((newWidth / window.innerWidth) * 100);
         }
     };
 
@@ -36,7 +43,7 @@ const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
             onMouseMove={mouseDown ? handleMouseMove : undefined}
             onMouseUp={handleMouseUp}
         >
-            <div className="editor-container" style={{ width: width }}>
+            <div className="editor-container" style={{ width: `${width}%` }}>
                 {leftPanel}
             </div>
             <div className="resize" onMouseDown={handleMouseDown} />
