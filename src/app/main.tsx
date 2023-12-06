@@ -48,6 +48,7 @@ const Home: React.FC = () => {
                 }} >
                     <Settings
                         isOpen={isSettingsOpen}
+                        setIsOpen={setIsSettingsOpen}
                     />
                     <div className="main-inner-container">
                         <Resizable

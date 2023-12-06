@@ -1,14 +1,28 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import { MinimalContext, ThemeContext } from "../resources/contexts";
 import '../styles/settings.css';
 
 interface SettingsProps {
-    isOpen: boolean
+    isOpen: boolean,
+    setIsOpen: (isOpen: boolean) => void
 }
 
-const Settings: React.FC<SettingsProps> = ({ isOpen }) => {
+const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
     const { value: isMinimal, setValue: setIsMinimal } = useContext(MinimalContext);
     const { value: theme, setValue: setTheme } = useContext(ThemeContext);
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+                console.log("klsdnmf")
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => { document.removeEventListener('mousedown', handleClickOutside); };
+    })
 
     const handleToggleMinimal = () => {
         setIsMinimal(!isMinimal)
@@ -20,7 +34,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen }) => {
 
     return (
         <div className={`settings-container ${isOpen ? `display` : `hide`}`}>
-            <div className="settings-modal">
+            <div className="settings-modal" ref={modalRef}>
                 <h1>Settings</h1>
                 <div className="settings-modal-inner">
                     <button className="submit-button" onClick={handleToggleMinimal}>Toggle Minimal Mode</button>
