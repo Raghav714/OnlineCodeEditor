@@ -61,16 +61,16 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                             <h3>Shift + Enter</h3>
                         </div>
                         <div className="key-mapping">
+                            <h3>Clear Console</h3>
+                            <h3>Cmd/Ctrl + Shift + D</h3>
+                        </div>
+                        <div className="key-mapping">
                             <h3>Settings</h3>
                             <h3>Esc</h3>
                         </div>
                         <div className="key-mapping">
                             <h3>Toggle Minimal Mode</h3>
                             <h3>Cmd/Ctrl + M</h3>
-                        </div>
-                        <div className="key-mapping">
-                            <h3>Clear Console</h3>
-                            <h3>Cmd/Ctrl + Shift + D</h3>
                         </div>
                     </div>
                 </div>
