@@ -72,6 +72,10 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                             <h3>Toggle Minimal Mode</h3>
                             <h3>Cmd/Ctrl + M</h3>
                         </div>
+                        <div className="key-mapping">
+                            <h3>Find and Replace</h3>
+                            <h3>Cmd/Ctrl + F</h3>
+                        </div>
                     </div>
                 </div>
             </div>
