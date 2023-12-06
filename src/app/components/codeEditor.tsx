@@ -23,6 +23,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
 
     const runCode = async () => {
         try {
+            setOutput("");
             let requestOptions = {
                 method: "POST",
                 headers: {
@@ -55,7 +56,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
 
     return (
         <div className="code-editor-container">
-            <div className={`editor-navbar-container ${isMinimal ? 'hidden' : 'visible'}`}>
+            <div className={`${isMinimal ? 'hidden' : 'visible'}  editor-navbar-container`}>
                 <button className="submit-button run-button" onClick={runCode}>
                     Run
                 </button>

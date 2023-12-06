@@ -12,3 +12,39 @@
     width: 100%;
     display: flex;
 }
+
+.info-icon-container {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin: 0.5em;
+}
+
+.info-icon {
+    height: 1.5em;
+    filter: brightness(50%);
+}
+
+.info-overlay {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-100%);
+    white-space: nowrap;
+    color: rgb(197, 193, 193);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.2em 0.6em;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    font-size: 1em;
+    text-align: center;
+    visibility: hidden;
+}
+
+.info-icon-container:hover .info-overlay {
+    opacity: 1;
+    transform: translateX(-100%);
+    visibility: visible;
+}

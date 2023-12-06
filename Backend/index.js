@@ -25,6 +25,8 @@ app.post('/', (req, res) => {
         res.status(200).json({ output: pythonProcess.stdout.toString() });
     }
 });
+
+
 app.get('/', (req, res) => {
     res.status(200).send("jello")
 });

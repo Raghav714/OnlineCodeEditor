@@ -22,7 +22,6 @@ const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
                 theme={ThemeMap[theme]}
                 basicSetup={{
                     lineNumbers: false,
-
                 }}
                 extensions={[
                     EditorView.lineWrapping

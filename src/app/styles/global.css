@@ -12,4 +12,17 @@
   padding: 0.6em 1.2em;
   border-radius: 3px;
   margin: 0em 1em;
+
+  color: #3f4046;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.hidden {
+  display: none;
+}
+
+.visibile {
+  display: flex;
 }

@@ -4,7 +4,7 @@
     flex-direction: column;
 }
 
-.editor-navbar-container.visible {
+.editor-navbar-container {
     height: 3.3em;
     display: flex;
     justify-content: flex-end;
@@ -12,16 +12,9 @@
     background-color: #3f4046;
 }
 
-.editor-navbar-container.hidden {
-    display: none;
-}
-
-.run-button {
-    color: #3f4046;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-}
+/* .run-button {
+    
+} */
 
 .editor {
     height: 100% !important;
