@@ -4,8 +4,6 @@ import { ThemeContext } from '../resources/contexts';
 import ThemeMap from "../resources/themes";
 import '../styles/console.css';
 
-
-
 interface ConsoleOutputProps {
     output: string
 }
@@ -22,6 +20,8 @@ const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
                 theme={ThemeMap[theme]}
                 basicSetup={{
                     lineNumbers: false,
+                    highlightActiveLineGutter: false,
+                    highlightActiveLine: false,
                 }}
                 extensions={[
                     EditorView.lineWrapping

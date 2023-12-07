@@ -8,6 +8,8 @@ export const MinimalContext = createContext<MinimalContextType>({
     value: false,
     setValue: () => { }
 })
+
+
 interface ThemeContextType {
     value: string,
     setValue: (value: string) => void;

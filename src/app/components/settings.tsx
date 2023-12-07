@@ -16,7 +16,6 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
         const handleClickOutside = (event: MouseEvent) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
-                console.log("klsdnmf")
             }
         };
 

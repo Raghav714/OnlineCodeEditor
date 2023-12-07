@@ -38,6 +38,7 @@ const Home: React.FC = () => {
 
     return (
         <div className="main-container">
+            <title>Online Python Editor</title>
             <MinimalContext.Provider value={{
                 value: isMinimal,
                 setValue: setIsMinimal
