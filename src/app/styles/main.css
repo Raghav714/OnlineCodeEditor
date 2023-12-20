@@ -7,9 +7,14 @@
     justify-content: center;
 }
 
+.file-sidebar {
+    width: 20%;
+}
+
 .main-inner-container {
     height: 100%;
     width: 100%;
+    flex-shrink: 1;
     display: flex;
 }
 

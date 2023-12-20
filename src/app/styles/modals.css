@@ -1,0 +1,99 @@
+.settings-container.display,
+.login-container.display {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.settings-container.hide,
+.login-container.hide,
+.login-modal-inner.hide {
+    display: none;
+}
+
+
+.settings-modal,
+.login-modal {
+    border-radius: 0.2em;
+    padding: 3em 2em;
+    background-color: rgb(232, 232, 232);
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-modal {
+    width: 50%;
+    max-width: 480px;
+    height: 70%;
+}
+
+.login-modal {
+    height: 40%;
+    width: 40%;
+    max-width: 450px;
+}
+
+.login-modal-inner.display {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.settings-modal>h1 {
+    height: 10%;
+    margin-bottom: 1em;
+}
+
+.settings-modal-inner {
+    height: 90%;
+    display: flex;
+    width: 75%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.theme-dropdown-container,
+.language-dropdown-container {
+    margin-left: 1em;
+}
+
+
+.settings-key-mappings {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-key-mappings>h2 {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0.5em;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.settings-modal .key-mapping {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5em 0em;
+}
+
+.settings-modal h3 {
+    font-weight: 500;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    ;
+}

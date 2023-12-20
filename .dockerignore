@@ -1,0 +1,10 @@
+# flyctl launch added from .gitignore
+**/.vscode
+**/.DS_Store
+**/next-env.d.ts
+
+**/node_modules
+**/.env.local
+**/pb_data
+**/pb_migrations
+

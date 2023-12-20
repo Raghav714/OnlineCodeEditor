@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext } from "react";
-import { MinimalContext, ThemeContext } from "../resources/contexts";
-import '../styles/settings.css';
+import { LayoutContext, ThemeContext } from "../resources/contexts";
+import '../styles/modals.css';
 
 interface SettingsProps {
     isOpen: boolean,
@@ -8,7 +8,7 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
-    const { value: isMinimal, setValue: setIsMinimal } = useContext(MinimalContext);
+    const { value: isMinimal, setValue: setIsMinimal } = useContext(LayoutContext);
     const { value: theme, setValue: setTheme } = useContext(ThemeContext);
     const modalRef = useRef<HTMLDivElement>(null);
 
