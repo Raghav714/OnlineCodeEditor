@@ -1,7 +1,7 @@
 .vscode
 .DS_Store
 next-env.d.ts
-.next/*/
+.next/
 node_modules
 .env.local
 pb/*/

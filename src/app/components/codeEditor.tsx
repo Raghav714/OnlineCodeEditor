@@ -50,6 +50,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     useEffect(() => {
         if (!isSignedIn) {
             setIsSidebarOpen(false)
+            setCode("");
         }
     }, [isSignedIn])
 

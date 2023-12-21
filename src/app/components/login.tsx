@@ -6,19 +6,21 @@ const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
 const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
 
 async function checkAuth(email: string, password: string) {
-    const authData = await pb.collection('users').authWithPassword(email, password);
+    try {
+        const authData = await pb.collection('users').authWithPassword(email, password);
 
-    if (pb.authStore.isValid) {
-        return {
-            isValid: true,
-            userId: pb.authStore.model?.id,
+        if (pb.authStore.isValid) {
+            return {
+                isValid: true,
+                userId: pb.authStore.model?.id,
+            }
+        } else {
+            return null
         }
-    } else {
-        return null
+    } catch (error) {
+        console.error('Error logging in:', error);
+        return null;
     }
-}
-async function logout() {
-    pb.authStore.clear();
 }
 
 interface LoginProps {
@@ -56,37 +58,44 @@ const Login: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
             if (files) {
                 setIsSignedIn(true);
                 setUserId(files.userId);
+                setIsOpen(false);
             }
+
         } catch (error) {
             console.error("Error in fetching files", error);
         }
     }
-    const handleLogOut = () => {
-        setIsSignedIn(false);
-        setUserId("");
-        logout();
-    }
+
 
     return (
-        <div className={`login-container ${isOpen ? `display` : `hide`}`}>
+        <div className={`login-container ${isOpen ? `visible` : `hidden`}`}>
             <div className="login-modal" ref={modalRef}>
-                <h1>Login</h1>
-                <div className={`login-modal-inner ${isSignedIn ? `hide` : `display`}`}>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                    />
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                    />
-                    <button onClick={handleSubmit}>Submit</button>
+                <h1>Sign in</h1>
+                <div className={`login-modal-inner`}>
+                    <div className="input-container">
+                        <h4 className="input-tag">Email address</h4>
+                        <input
+                            className="input-form login-email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email"
+                        />
+                    </div>
+                    <div className="input-container">
+                        <h4 className="input-tag">Password</h4>
+                        <input
+                            className="input-form login-password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                        />
+                    </div>
+                    <button onClick={handleSubmit} className="login-button">Sign In</button>
+                    <h4 className="create-account-button">Create Account</h4>
                 </div>
-                <button onClick={handleLogOut}>LogOut</button>
+
             </div>
         </div >
     )

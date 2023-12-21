@@ -7,8 +7,29 @@
     justify-content: center;
 }
 
-.file-sidebar {
-    width: 20%;
+.account-button-container {
+    position: fixed;
+    margin: 0.5em 0.5em 0em 0em;
+    z-index: 1;
+    right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.account-button {
+    height: 1.5em;
+    width: 1.5em;
+    margin-bottom: 0.3em;
+    filter: brightness(40%);
+    cursor: pointer;
+}
+
+.logout-button {
+    padding: 0.5em 1em;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 .main-inner-container {
@@ -26,8 +47,8 @@
 }
 
 .info-icon {
-    height: 1.5em;
-    filter: brightness(50%);
+    height: 1.3em;
+    filter: brightness(40%);
 }
 
 .info-overlay {

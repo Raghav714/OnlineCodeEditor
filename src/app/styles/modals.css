@@ -1,5 +1,5 @@
-.settings-container.display,
-.login-container.display {
+.settings-container,
+.login-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -12,43 +12,69 @@
     z-index: 1;
 }
 
-.settings-container.hide,
-.login-container.hide,
-.login-modal-inner.hide {
-    display: none;
-}
-
 
 .settings-modal,
 .login-modal {
     border-radius: 0.2em;
-    padding: 3em 2em;
     background-color: rgb(232, 232, 232);
     z-index: 2;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.settings-modal {
-    width: 50%;
-    max-width: 480px;
-    height: 70%;
-}
-
 .login-modal {
-    height: 40%;
-    width: 40%;
-    max-width: 450px;
+    padding: 2.5em;
+    width: 45%;
+    max-width: 470px;
+    min-width: 290;
 }
 
-.login-modal-inner.display {
+.login-modal>h1 {
+    margin-bottom: 0.5em;
+}
+
+
+.login-modal-inner {
     height: 100%;
+    max-height: 280px;
+    width: 70%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
+}
+
+.login-button {
+    margin-top: 0.6em;
+    width: 100%;
+    background-color: rgb(55, 61, 245);
+    color: white;
+    padding: 0.6em;
+    border-radius: 4px;
+    font-size: 11pt;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.05rem;
+}
+
+.create-account-button {
+    width: fit-content;
+    margin: auto;
+    font-size: 10pt;
+    font-weight: 300;
+    margin-top: 1.1em;
+    color: rgb(7, 7, 133);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+.settings-modal {
+    width: 50%;
+    padding: 3em 2em;
+    max-width: 480px;
+    height: 70%;
 }
 
 .settings-modal>h1 {

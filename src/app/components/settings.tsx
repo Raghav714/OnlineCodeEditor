@@ -32,7 +32,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
     };
 
     return (
-        <div className={`settings-container ${isOpen ? `display` : `hide`}`}>
+        <div className={`settings-container ${isOpen ? `visible` : `hidden`}`}>
             <div className="settings-modal" ref={modalRef}>
                 <h1>Settings</h1>
                 <div className="settings-modal-inner">
