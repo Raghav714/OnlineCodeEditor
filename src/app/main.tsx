@@ -4,8 +4,8 @@ import { LayoutContext, ThemeContext, AuthContext } from "./resources/contexts";
 import Resizable from "./components/resizable";
 import CodeEditor from "./components/codeEditor";
 import Console from './components/console';
-import Settings from './components/settings';
-import Login from './components/login';
+import SettingsModal from './components/settingsModal';
+import AccountModal from './components/accountModal';
 import './styles/main.css';
 import InfoIcon from './assets/info-icon.png';
 import AccountIcon from './assets/account-icon.png';
@@ -99,15 +99,15 @@ const Home: React.FC = () => {
                         value: theme,
                         setValue: setTheme
                     }} >
-                        <Settings
+                        <SettingsModal
                             isOpen={isSettingsOpen}
                             setIsOpen={setIsSettingsOpen}
                         />
-                        <Login
+                        <AccountModal
                             isOpen={isLoginOpen}
                             setIsOpen={setIsLoginOpen}
                         />
-                        <div className="account-button-container" ref={logoutRef}>
+                        <div className={`${isMinimal ? 'hidden' : 'visible'} account-button-container`} ref={logoutRef}>
                             <img className="account-button" onClick={isSignedIn ? toggleIsLogoutOpen : handleLogin} src={AccountIcon.src} />
                             <button className={`${isLogoutOpen ? 'visible' : 'hidden'} logout-button`} onClick={handleLogout}>
                                 Logout
