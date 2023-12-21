@@ -77,12 +77,10 @@ const Home: React.FC = () => {
                         />
                         <div className="main-inner-container">
                             <Resizable
-                                leftPanel={<CodeEditor
-                                    setOutput={setConsoleOutput}
-                                />}
-                                rightPanel={<Console
-                                    output={consoleOutput}
-                                />}
+                                leftPanel={<CodeEditor setOutput={setConsoleOutput} />}
+                                rightPanel={<Console output={consoleOutput} />}
+                                draggerWidth={4}
+                                draggerColor="#7E4B0E"
                             />
 
                         </div>

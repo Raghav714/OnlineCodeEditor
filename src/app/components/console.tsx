@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { ThemeContext } from '../resources/contexts';
-import ThemeMap from "../resources/themes";
+import { ThemeMap } from "../resources/themes";
 import '../styles/console.css';
 
 interface ConsoleOutputProps {

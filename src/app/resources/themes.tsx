@@ -1,8 +1,8 @@
-import { nord } from '@uiw/codemirror-theme-nord';
-import { vscodeDark } from '@uiw/codemirror-theme-vscode';
-import { tokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm';
-import { sublime } from '@uiw/codemirror-theme-sublime';
-import { quietlight } from '@uiw/codemirror-theme-quietlight';
+import { nord, defaultSettingsNord } from '@uiw/codemirror-theme-nord';
+import { vscodeDark, defaultSettingsVscodeDark } from '@uiw/codemirror-theme-vscode';
+import { tokyoNightStorm, defaultSettingsTokyoNightStorm } from '@uiw/codemirror-theme-tokyo-night-storm';
+import { sublime, defaultSettingsSublime } from '@uiw/codemirror-theme-sublime';
+import { quietlight, defaultSettingsQuietlight } from '@uiw/codemirror-theme-quietlight';
 
 
 interface ThemeMapType {
@@ -14,7 +14,16 @@ const ThemeMap: ThemeMapType = {
     'vscode': vscodeDark,
     'tokyoNightStorm': tokyoNightStorm,
     'sublime': sublime,
-    'quietlight': quietlight
+    'quietlight': quietlight,
 }
 
-export default ThemeMap;
+const ThemeBackgroundMap: ThemeMapType = {
+    'nord': defaultSettingsNord,
+    'vscode': defaultSettingsVscodeDark,
+    'tokyoNightStorm': defaultSettingsTokyoNightStorm,
+    'sublime': defaultSettingsSublime,
+    'quietlight': defaultSettingsQuietlight,
+}
+
+export { ThemeMap, ThemeBackgroundMap };
+

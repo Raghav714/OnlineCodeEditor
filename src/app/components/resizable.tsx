@@ -2,13 +2,60 @@ import React, { ReactNode, useState, useRef, useEffect } from "react";
 import '../styles/resizable.css'
 
 interface ResizableProps {
-    leftPanel: ReactNode;
-    rightPanel: ReactNode;
+    leftPanel: ReactNode
+    rightPanel: ReactNode
+
+    // Optional - Left panel will be displayed when true, else false
+    // Default: true
+    displayLeftPanel?: boolean
+
+
+    // Optional - When set, uses pixels to calculate the width of the left panel
+    // otherwise, width is calculated as a percentage of parent|window width
+    // Default: false
+    useAbsolute?: boolean
+
+    // Optional - Default width of the left panel. Uses px when useAbsolute set, else %
+    // Default: 50
+    defaultWidth?: number
+
+    // Optional - Width of parent element; used to calc left panel width
+    // when useAbsolute flag is NOT set
+    // Default: window.innerWidth
+    parentWidth?: number
+
+    // Optional - Minimum width (px) of left panel
+    // Only use when useAbsolute flag is set
+    // Default: 0
+    minWidthPx?: number
+
+    // Optional - Color of the resize dragger
+    // Default: black
+    draggerColor?: string
+
+    // Optional - Width (px) of the resize dragger
+    // Default: 4
+    draggerWidth?: number
+
+    // Optional - Will collapse left panel if user slides drager so left
+    // panel is smaller than minWidthPx
+    // Default: false
+    collapseLeftPanel?: boolean
 }
 
-const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
-    //Width of leftPanel as percent
-    const [width, setWidth] = useState<number>(50);
+const Resizable: React.FC<ResizableProps> = ({
+    leftPanel,
+    rightPanel,
+    displayLeftPanel = true,
+    useAbsolute = false,
+    defaultWidth = 50,
+    minWidthPx = 0,
+    // parentWidth = window.innerWidth,
+    draggerColor = '#000000',
+    collapseLeftPanel = false,
+    draggerWidth = 4
+}) => {
+    const [width, setWidth] = useState<number>(defaultWidth);
     const [mouseDown, setMouseDown] = useState<boolean>(false);
     const [startX, setStartX] = useState<number>(0);
     const [startWidth, setStartWidth] = useState<number>(0);
@@ -17,10 +64,14 @@ const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
         setStartWidth(window.innerWidth * (width / 100));
     }, [])
 
+    useEffect(() => {
+        setWidth(displayLeftPanel ? defaultWidth : 0);
+    }, [displayLeftPanel])
+
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         setStartX(e.clientX);
-        setStartWidth(window.innerWidth * (width / 100));
+        setStartWidth(useAbsolute ? width : window.innerWidth * (width / 100));
         setMouseDown(true);
         e.preventDefault();
     };
@@ -28,8 +79,16 @@ const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (mouseDown) {
             const deltaX = e.clientX - startX;
-            const newWidth = startWidth + deltaX;
-            setWidth((newWidth / window.innerWidth) * 100);
+            const newWidthPercent = (startWidth + deltaX) / window.innerWidth * 100;
+            let newWidthPixel = Math.max(startWidth + deltaX, minWidthPx)
+
+            if (collapseLeftPanel &&
+                (startWidth >= minWidthPx && ((startWidth + deltaX) < minWidthPx - 70))) {
+                newWidthPixel = 0;
+            }
+
+
+            setWidth(useAbsolute ? newWidthPixel : newWidthPercent)
         }
     };
 
@@ -42,10 +101,13 @@ const Resizable: React.FC<ResizableProps> = ({ leftPanel, rightPanel }) => {
             onMouseMove={mouseDown ? handleMouseMove : undefined}
             onMouseUp={handleMouseUp}
         >
-            <div className="editor-container" style={{ width: `${width}%` }}>
+            <div className="editor-container" style={{ width: `${width}${useAbsolute ? 'px' : '%'}` }}>
                 {leftPanel}
             </div>
-            <div className="resize" onMouseDown={handleMouseDown} />
+            <div className="resize" onMouseDown={handleMouseDown} style={{
+                width: draggerWidth,
+                backgroundColor: draggerColor,
+            }} />
 
             <div className="output-container">
                 {rightPanel}

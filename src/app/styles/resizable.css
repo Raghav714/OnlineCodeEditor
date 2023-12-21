@@ -1,6 +1,7 @@
 .resizable-container {
     display: flex;
     width: 100%;
+    min-width: 140px !important;
     height: 100%;
     background-color: antiquewhite;
 }
@@ -12,8 +13,6 @@
 
 .resize {
     cursor: col-resize;
-    width: 4px;
-    background-color: rgb(126, 75, 14);
 }
 
 .output-container {

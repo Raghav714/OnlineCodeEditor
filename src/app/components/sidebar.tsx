@@ -1,18 +1,24 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { AuthContext, LayoutContext, FileContext } from '../resources/contexts';
+import { AuthContext, LayoutContext, FileContext, ThemeContext } from '../resources/contexts';
 import '../styles/codeEditor.css';
 import PocketBase from 'pocketbase';
 import SingleFile from './singleFile';
+import { ThemeBackgroundMap } from '../resources/themes';
 import { text } from 'node:stream/consumers';
 const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
 const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
 
 async function getPythonFiles(userId: string) {
-    if (pb.authStore.isValid) {
-        const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'` });
+    if (!pb.authStore.isValid) {
+        return null;
+    }
+
+    try {
+        const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'`, requestKey: null });
         return data?.items as any[];
-    } else {
-        return null
+    } catch (error) {
+        console.error('Error fetching Python files:', error);
+        return null;
     }
 }
 
@@ -30,6 +36,7 @@ const Sidebar: React.FC = () => {
     const [title, setTitle] = useState<string>("");
     const [showInput, setShowInput] = useState<boolean>(false);
     const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
+    const { value: theme } = useContext(ThemeContext)
     const { fileId: fileId, setFileId: setFileId, setCode: setCode } = useContext(FileContext)
     const {
         value: isMinimal,
@@ -77,9 +84,15 @@ const Sidebar: React.FC = () => {
 
 
     return (
-        <div className={`${isSidebarOpen && !isMinimal ? 'visible' : 'hidden'} sidemirror-container`}>
+        <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container`} style={{
+            backgroundColor: ThemeBackgroundMap[theme].background,
+            color: ThemeBackgroundMap[theme].gutterActiveForeground,
+            borderRight: `2px solid ${ThemeBackgroundMap[theme].gutterForeground}`
+        }}>
             <div className="sidebar-header">
-                <h3>Files</h3>
+                <h3 style={{ borderBottom: `1px solid ${ThemeBackgroundMap[theme].gutterForeground}` }}>
+                    Files
+                </h3>
                 <button onClick={addFile} className='add-file-button'>+</button>
             </div>
             {

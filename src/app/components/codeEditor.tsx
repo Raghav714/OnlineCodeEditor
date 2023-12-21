@@ -2,23 +2,21 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView } from '@uiw/react-codemirror';
 import { LayoutContext, ThemeContext, AuthContext, FileContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
-import ThemeMap from "../resources/themes";
+import { ThemeMap, ThemeBackgroundMap } from "../resources/themes";
 import PocketBase from 'pocketbase';
 import "../styles/codeEditor.css"
 import Sidebar from "./sidebar";
+import Resizable from "./resizable";
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
 const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
 
 async function savePythonFile(fileId: string, pyCode: string) {
-    console.log(fileId)
-    console.log(pyCode)
     if (pb.authStore.isValid) {
         const record = await pb.collection('python_files').update(fileId, {
             code: pyCode,
         });
-        console.log(record)
         return record;
     } else {
         return null
@@ -56,6 +54,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     }, [isSignedIn])
 
 
+    const handleSaveFile = async () => {
+        await savePythonFile(fileId, code);
+    }
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key == 's' && e.metaKey) {
@@ -68,9 +69,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         return () => { window.removeEventListener('keydown', handleKeyDown) }
     }, [fileId, code, savePythonFile])
 
-    const handleSaveFile = async () => {
-        await savePythonFile(fileId, code);
-    }
+
 
 
     const runCode = async () => {
@@ -107,13 +106,15 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen)
     }
+    useEffect(() => {
+        console.log(ThemeBackgroundMap[theme])
+    }, [])
+
+
 
     return (
         <div className="code-editor-container">
             <div className={`${isMinimal ? 'hidden' : 'visible'}  editor-navbar-container`}>
-                <button onClick={handleSaveFile} className={`submit-button run-button ${isSignedIn ? 'visible' : 'hidden'}`}>
-                    Save
-                </button>
                 <button onClick={toggleSidebar} className={`submit-button run-button ${isSignedIn ? 'visible' : 'hidden'}`}>
                     Files
                 </button>
@@ -129,19 +130,30 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                     setCode: setCode,
                 }}
                 >
-                    <Sidebar />
-                    <CodeMirror
-                        className="editor"
-                        value={code}
-                        onChange={setCode}
-                        extensions={[python(), customKeymap]}
-                        height="100%"
-                        theme={ThemeMap[theme]}
-                        basicSetup={{
-                            lineNumbers: true,
-                            allowMultipleSelections: true,
-                            tabSize: 5,
-                        }}
+                    <Resizable
+                        leftPanel={<Sidebar />}
+                        rightPanel={
+                            <CodeMirror
+                                className="editor"
+                                value={code}
+                                onChange={setCode}
+                                extensions={[python(), customKeymap]}
+                                height="100%"
+                                theme={ThemeMap[theme]}
+                                basicSetup={{
+                                    lineNumbers: true,
+                                    allowMultipleSelections: true,
+                                    tabSize: 5,
+                                }}
+                            />
+                        }
+                        displayLeftPanel={isSidebarOpen}
+                        defaultWidth={160}
+                        minWidthPx={120}
+                        draggerWidth={6}
+                        draggerColor={ThemeBackgroundMap[theme].background}
+                        useAbsolute
+                        collapseLeftPanel
                     />
                 </FileContext.Provider>
             </div>
