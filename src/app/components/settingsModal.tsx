@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useContext } from "react";
 import { LayoutContext, ThemeContext } from "../resources/contexts";
-import '../styles/modals.css';
+import '../styles/SettingsLogin.css';
 
 interface SettingsProps {
     isOpen: boolean,

@@ -4,7 +4,6 @@ import '../styles/codeEditor.css';
 import PocketBase from 'pocketbase';
 import SingleFile from './singleFile';
 import { ThemeBackgroundMap } from '../resources/themes';
-import { text } from 'node:stream/consumers';
 const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
 const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
 
@@ -84,13 +83,14 @@ const Sidebar: React.FC = () => {
 
 
     return (
-        <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container`} style={{
-            backgroundColor: ThemeBackgroundMap[theme].background,
-            color: ThemeBackgroundMap[theme].gutterActiveForeground,
-            borderRight: `2px solid ${ThemeBackgroundMap[theme].gutterForeground}`
-        }}>
+        <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container dull`}
+            style={{
+                backgroundColor: ThemeBackgroundMap[theme].background,
+                color: ThemeBackgroundMap[theme].gutterActiveForeground,
+                borderRight: `2px solid ${ThemeBackgroundMap[theme].gutterForeground}`
+            }}>
             <div className="sidebar-header">
-                <h3 style={{ borderBottom: `1px solid ${ThemeBackgroundMap[theme].gutterForeground}` }}>
+                <h3 className='' style={{ borderBottom: `1px solid ${ThemeBackgroundMap[theme].gutterForeground}` }}>
                     Files
                 </h3>
                 <button onClick={addFile} className='add-file-button'>+</button>

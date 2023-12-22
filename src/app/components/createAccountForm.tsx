@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/modals.css';
+import '../styles/SettingsLogin.css';
 
 interface CreateAccountFormProps {
     isOpen: boolean,
@@ -57,6 +57,11 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({
         switchToLogin();
     }
 
+    const onSubmitWithEnter = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        handleSubmit();
+    };
+
     return (
         <div className={`${isOpen ? 'visible' : 'hidden'} create-account-container`}>
             <h1>Create Account</h1>
@@ -81,16 +86,18 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({
                         placeholder="Password"
                     />
                 </div>
-                <div className="input-container">
-                    <h4 className="input-tag">Confirm Password</h4>
-                    <input
-                        className="input-form login-password"
-                        type="password"
-                        value={passwordConfirm}
-                        onChange={(e) => setPasswordConfirm(e.target.value)}
-                        placeholder="Password"
-                    />
-                </div>
+                <form onSubmit={onSubmitWithEnter}>
+                    <div className="input-container">
+                        <h4 className="input-tag">Confirm Password</h4>
+                        <input
+                            className="input-form login-password"
+                            type="password"
+                            value={passwordConfirm}
+                            onChange={(e) => setPasswordConfirm(e.target.value)}
+                            placeholder="Password"
+                        />
+                    </div>
+                </form>
                 <div className={`${isErrorDisplayed ? 'visible' : 'hidden'} error-message`}>{errorMessage}</div>
                 <button onClick={valididateAndSubmit} className="login-button">Create Account</button>
                 <h4 onClick={handleSwitchToLogin} className="create-account-button">Back To Login</h4>

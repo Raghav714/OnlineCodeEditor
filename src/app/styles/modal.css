@@ -1,0 +1,30 @@
+.visible {
+    display: flex
+}
+
+.hidden {
+    display: none;
+}
+
+.outer-modal-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(0, 0, 0, 0.3);
+    z-index: 3;
+}
+
+.modal-container {
+    border-radius: 0.2em;
+    background-color: rgb(232, 232, 232);
+    z-index: 4;
+    padding: 2.5em;
+    width: 45%;
+    max-width: 470px;
+    min-width: 290;
+}

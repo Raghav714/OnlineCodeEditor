@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { AuthContext } from "../resources/contexts";
-import '../styles/modals.css';
+import '../styles/SettingsLogin.css';
 import LoginForm from "./loginForm";
 import CreateAccountForm from "./createAccountForm";
 import PocketBase from 'pocketbase';
@@ -52,11 +52,11 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     } = useContext(AuthContext);
     const modalRef = useRef<HTMLDivElement>(null);
 
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [email, setEmail] = useState<string>("test@gmail.com");
+    const [password, setPassword] = useState<string>("test123");
     const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [displayLogin, setDisplayLogin] = useState<boolean>(true);
-    const [isLoginErrorDisplayed, setIsErrorDisplayed] = useState<boolean>(false)
+    const [isLoginErrorDisplayed, setIsLoginErrorDisplayed] = useState<boolean>(false)
     const [isCreateAccountError, setIsCreateAccountError] = useState<boolean>(false);
 
 
@@ -65,7 +65,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
                 setDisplayLogin(true);
-                resetState();
+                // resetState();
             }
         };
 
@@ -77,11 +77,11 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
         const files = await checkAuth(email, password);
         if (files) {
             setIsSignedIn(true);
-            setIsErrorDisplayed(false);
+            setIsLoginErrorDisplayed(false);
             setUserId(files.userId);
             setIsOpen(false);
         } else {
-            setIsErrorDisplayed(true)
+            setIsLoginErrorDisplayed(true)
         }
 
     }
@@ -96,7 +96,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     }
 
     const handleToggleLoginCreate = () => {
-        resetState()
+        // resetState();
         setDisplayLogin(prev => !prev)
     }
 
@@ -104,7 +104,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
         setPassword("");
         setPasswordConfirm("");
         setEmail("");
-        setIsErrorDisplayed(false);
+        setIsLoginErrorDisplayed(false);
         setIsCreateAccountError(false);
     }
 

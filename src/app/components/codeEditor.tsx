@@ -7,6 +7,7 @@ import PocketBase from 'pocketbase';
 import "../styles/codeEditor.css"
 import Sidebar from "./sidebar";
 import Resizable from "./resizable";
+import { PluginValue, lineNumberMarkers } from '@codemirror/view';
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
@@ -107,6 +108,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen)
     }
+
+
     useEffect(() => {
         console.log(ThemeBackgroundMap[theme])
     }, [])
@@ -136,9 +139,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                         rightPanel={
                             <CodeMirror
                                 className="editor"
+
                                 value={code}
                                 onChange={setCode}
-                                extensions={[python(), customKeymap]}
+                                extensions={[
+                                    python(),
+                                    customKeymap,
+                                    // EditorView.lineWrapping
+                                ]}
                                 height="100%"
                                 theme={ThemeMap[theme]}
                                 basicSetup={{
@@ -149,9 +157,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                             />
                         }
                         displayLeftPanel={isSidebarOpen}
+                        setDisplayLeftPanel={setIsSidebarOpen}
                         defaultWidth={160}
                         minWidthPx={120}
-                        draggerWidth={6}
+                        draggerWidth={7}
                         draggerColor={ThemeBackgroundMap[theme].background}
                         useAbsolute
                         collapseLeftPanel

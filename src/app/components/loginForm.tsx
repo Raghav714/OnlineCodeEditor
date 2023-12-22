@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../styles/modals.css';
+import '../styles/SettingsLogin.css';
 
 interface LoginFormProps {
     isOpen: boolean,
@@ -13,9 +13,13 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ isOpen, email, setEmail, isErrorDisplayed, password, setPassword, handleSubmit, switchToCreateAccount }) => {
+    const onSubmitWithEnter = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        handleSubmit();
+    };
     return (
         <div className={`${isOpen ? 'visible' : 'hidden'} login-modal-container`}>
-            <h1>Sign in</h1>
+            <h1>Sign In</h1>
             <div className={`login-modal-inner`}>
                 <div className="input-container">
                     <h4 className="input-tag">Email address</h4>
@@ -27,16 +31,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ isOpen, email, setEmail, isErrorD
                         placeholder="Email"
                     />
                 </div>
-                <div className="input-container">
-                    <h4 className="input-tag">Password</h4>
-                    <input
-                        className="input-form login-password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                    />
-                </div>
+                <form onSubmit={onSubmitWithEnter}>
+                    <div className="input-container">
+                        <h4 className="input-tag">Password</h4>
+                        <input
+                            className="input-form login-password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                        />
+                    </div>
+                </form>
                 <div className={`${isErrorDisplayed ? 'visible' : 'hidden'} error-message`}>Error logging in</div>
                 <button onClick={handleSubmit} className="login-button">Sign In</button>
                 <h4 onClick={switchToCreateAccount} className="create-account-button">Create Account</h4>

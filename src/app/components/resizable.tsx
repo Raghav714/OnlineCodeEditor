@@ -1,5 +1,7 @@
 import React, { ReactNode, useState, useRef, useEffect } from "react";
 import '../styles/resizable.css'
+//FOR NOW: if using relative units (%) will only work if viewport width is
+// the resizable width
 
 interface ResizableProps {
     leftPanel: ReactNode
@@ -8,6 +10,7 @@ interface ResizableProps {
     // Optional - Left panel will be displayed when true, else false
     // Default: true
     displayLeftPanel?: boolean
+    setDisplayLeftPanel?: (val: boolean) => void
 
 
     // Optional - When set, uses pixels to calculate the width of the left panel
@@ -47,6 +50,7 @@ const Resizable: React.FC<ResizableProps> = ({
     leftPanel,
     rightPanel,
     displayLeftPanel = true,
+    setDisplayLeftPanel = () => { },
     useAbsolute = false,
     defaultWidth = 50,
     minWidthPx = 0,
@@ -82,11 +86,16 @@ const Resizable: React.FC<ResizableProps> = ({
             const newWidthPercent = (startWidth + deltaX) / window.innerWidth * 100;
             let newWidthPixel = Math.max(startWidth + deltaX, minWidthPx)
 
+
             if (collapseLeftPanel &&
                 (startWidth >= minWidthPx && ((startWidth + deltaX) < minWidthPx - 70))) {
                 newWidthPixel = 0;
+                if (setDisplayLeftPanel) {
+                    setDisplayLeftPanel(false);
+                }
+            } else if (width == 0) {
+                setDisplayLeftPanel(true);
             }
-
 
             setWidth(useAbsolute ? newWidthPixel : newWidthPercent)
         }
@@ -101,7 +110,7 @@ const Resizable: React.FC<ResizableProps> = ({
             onMouseMove={mouseDown ? handleMouseMove : undefined}
             onMouseUp={handleMouseUp}
         >
-            <div className="editor-container" style={{ width: `${width}${useAbsolute ? 'px' : '%'}` }}>
+            <div className="editor-container" style={{ width: `${width}${useAbsolute ? 'px' : '%'}`, zIndex: 2 }}>
                 {leftPanel}
             </div>
             <div className="resize" onMouseDown={handleMouseDown} style={{

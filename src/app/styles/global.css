@@ -49,6 +49,14 @@
   display: none;
 }
 
-.visibile {
+.visible {
   display: flex;
+}
+
+.dull {
+  filter: brightness(90%)
+}
+
+.bright {
+  filter: brightness(110%);
 }
