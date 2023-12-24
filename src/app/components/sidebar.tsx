@@ -86,6 +86,16 @@ const Sidebar: React.FC = () => {
         const updatedFiles = files.filter((file: any) => file.id !== id);
         setFiles(updatedFiles);
     }
+    const handleRenameFile = (id: string, newTitle: string) => {
+        const updatedFiles = files.map((file: any) => {
+            if (file.id === id) {
+                return { ...file, title: newTitle };
+            }
+            return file;
+        });
+        console.log(files)
+        setFiles(updatedFiles);
+    }
 
 
     return (
@@ -109,6 +119,7 @@ const Sidebar: React.FC = () => {
                         title={file.title}
                         code={file.code}
                         handleDeleteFile={handleDeleteFile}
+                        handleRenameFile={handleRenameFile}
                     />
                 })
             }

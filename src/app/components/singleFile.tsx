@@ -20,21 +20,49 @@ async function deletePythonFile(fileId: string) {
         return null
     }
 }
+async function renamePythonFile(fileId: string, newTitle: string) {
+    if (pb.authStore.isValid) {
+        let record = await pb.collection('python_files').update(fileId, { title: newTitle });
+        return record;
+    } else {
+        return null
+    }
+}
 
 interface SingleFileProps {
     id: string,
     title: string,
     code: string,
     handleDeleteFile: (id: string) => void
+    handleRenameFile: (id: string, title: string) => void
 }
 
 
-const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFile }) => {
+const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFile, handleRenameFile }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+    const [isRenaming, setIsRenaming] = useState<boolean>(false);
+    const [newFilename, setNewFilename] = useState<string>(title);
+    const inputRef = useRef<HTMLInputElement>(null);
+
 
     const { setCode: setCode, setFileId } = useContext(FileContext);
     const { value: theme } = useContext(ThemeContext);
+
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+                setNewFilename(title);
+                setIsRenaming(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleFileClick = () => {
         setFileId(id)
@@ -52,7 +80,7 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFi
     };
 
     const handleRename = () => {
-
+        setIsRenaming(true);
     }
 
     const toggleConfirmDelete = () => {
@@ -66,42 +94,62 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFi
         handleDeleteFile(id);
     }
 
-    return (
-        <div className="single-file-container"
-            onClick={handleFileClick}
-            style={{ backgroundColor: ThemeBackgroundMap[theme].background }}
-            onMouseLeave={handleMouseLeave}
-        >
-            <h4 className="dull">{title}</h4>
-            <div
-                className="sidebar-options-container"
-                style={{ backgroundColor: ThemeBackgroundMap[theme].background }}
-                onClick={handleOptionsDropdown}
-            >
-                <img
-                    className={`options-icon dull`}
-                    src={OptionsIcon.src}
-                    alt="Options Button"
-                />
-                <Dropdown
-                    isOpen={isDropdownOpen}
-                    actions={[
-                        { tag: "Rename", action: handleRename },
-                        { tag: "Delete", action: toggleConfirmDelete },
-                    ]}
-                />
-                {createPortal(<Modal
-                    content={<ConfirmDelete
-                        fileTitle={title}
-                        handleYesClick={handleConfirmDelete}
-                        handleNoClick={() => setIsDeleteOpen(false)}
-                    />}
-                    isOpen={isDeleteOpen}
-                    setIsOpen={setIsDeleteOpen}
-                />, document.body
-                )}
-            </div>
+    const renameFile = (e: React.KeyboardEvent) => {
+        if (e.key == "Enter") {
+            renamePythonFile(id, newFilename);
+            handleRenameFile(id, newFilename);
+            setIsRenaming(false);
+        }
+    }
 
+    return (
+        <div className="single-file-outer-container">
+            {isRenaming ?
+                <input
+                    type="text"
+                    value={newFilename}
+                    ref={inputRef}
+                    onChange={(e) => setNewFilename(e.target.value)}
+                    onKeyDown={renameFile}
+                    autoFocus
+                />
+                :
+                <div className="single-file-container"
+                    onClick={handleFileClick}
+                    style={{ backgroundColor: ThemeBackgroundMap[theme].background }}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <h4 className="dull">{title}</h4>
+                    <div
+                        className="sidebar-options-container"
+                        style={{ backgroundColor: ThemeBackgroundMap[theme].background }}
+                        onClick={handleOptionsDropdown}
+                    >
+                        <img
+                            className={`options-icon dull`}
+                            src={OptionsIcon.src}
+                            alt="Options Button"
+                        />
+                        <Dropdown
+                            isOpen={isDropdownOpen}
+                            actions={[
+                                { tag: "Rename", action: handleRename },
+                                { tag: "Delete", action: toggleConfirmDelete },
+                            ]}
+                        />
+                        {createPortal(<Modal
+                            content={<ConfirmDelete
+                                fileTitle={title}
+                                handleYesClick={handleConfirmDelete}
+                                handleNoClick={() => setIsDeleteOpen(false)}
+                            />}
+                            isOpen={isDeleteOpen}
+                            setIsOpen={setIsDeleteOpen}
+                        />, document.body
+                        )}
+                    </div>
+                </div>
+            }
         </div>
     )
 }
