@@ -5,16 +5,31 @@ import { ThemeBackgroundMap } from "../resources/themes";
 import OptionsIcon from '../assets/options-icon.png';
 import Dropdown from "./dropdown";
 import Modal from "./modal";
+import PocketBase from 'pocketbase';
 import '../styles/codeEditor.css';
+
+
+const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
+const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
+
+async function deletePythonFile(fileId: string) {
+    if (pb.authStore.isValid) {
+        let record = await pb.collection('python_files').delete(fileId);
+        return record;
+    } else {
+        return null
+    }
+}
 
 interface SingleFileProps {
     id: string,
     title: string,
     code: string,
+    handleDeleteFile: (id: string) => void
 }
 
 
-const SingleFile: React.FC<SingleFileProps> = ({ id, title, code }) => {
+const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFile }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
 
@@ -40,9 +55,15 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code }) => {
 
     }
 
-    const handleDelete = () => {
+    const toggleConfirmDelete = () => {
         setIsDeleteOpen(true);
         setIsDropdownOpen(false);
+    }
+
+    const handleConfirmDelete = () => {
+        deletePythonFile(id);
+        setIsDeleteOpen(false);
+        handleDeleteFile(id);
     }
 
     return (
@@ -66,18 +87,43 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code }) => {
                     isOpen={isDropdownOpen}
                     actions={[
                         { tag: "Rename", action: handleRename },
-                        { tag: "Delete", action: handleDelete },
+                        { tag: "Delete", action: toggleConfirmDelete },
                     ]}
                 />
                 {createPortal(<Modal
+                    content={<ConfirmDelete
+                        fileTitle={title}
+                        handleYesClick={handleConfirmDelete}
+                        handleNoClick={() => setIsDeleteOpen(false)}
+                    />}
                     isOpen={isDeleteOpen}
                     setIsOpen={setIsDeleteOpen}
                 />, document.body
                 )}
-
             </div>
 
         </div>
     )
 }
+
+interface ConfirmDeleteProps {
+    fileTitle: string,
+    handleYesClick: () => void,
+    handleNoClick: () => void,
+}
+const ConfirmDelete: React.FC<ConfirmDeleteProps> = ({ fileTitle, handleYesClick, handleNoClick }) => {
+    return (
+        <div className="confirm-delete-container">
+            <h2>Are you sure you want to delete {fileTitle}?</h2>
+            <h4>This action can not be undone</h4>
+            <div className="confirm-delete-buttonss">
+                <button className="submit-button" onClick={handleYesClick}>Yes</button>
+                <button className="submit-button" onClick={handleNoClick}>No</button>
+            </div>
+        </div>
+    )
+}
+
 export default SingleFile;
+
+

@@ -1,48 +1,73 @@
 import React, { ReactNode, useState, useRef, useEffect } from "react";
 import '../styles/resizable.css'
-//FOR NOW: if using relative units (%) will only work if viewport width is
-// the resizable width
 
+/**
+ * A modular, resizable component on the x axis.
+ * A dragger is used to resize the width of the left and right components.
+ */
 interface ResizableProps {
+    /** Left panel of the Resizable Component */
     leftPanel: ReactNode
+
+    /** Right panel of the Resizable Component */
     rightPanel: ReactNode
 
-    // Optional - Left panel will be displayed when true, else false
-    // Default: true
+    /**
+     * @optional Controls whether left panel is displayed
+     * @default true
+     */
     displayLeftPanel?: boolean
     setDisplayLeftPanel?: (val: boolean) => void
 
-
-    // Optional - When set, uses pixels to calculate the width of the left panel
-    // otherwise, width is calculated as a percentage of parent|window width
-    // Default: false
+    /**
+     * When true, uses pixels to calculate the width of the left panel.
+     * When false, width of left panel is calculated as a percentage
+     * of the @prop parentWidth
+     * @default false
+     */
     useAbsolute?: boolean
 
-    // Optional - Default width of the left panel. Uses px when useAbsolute set, else %
-    // Default: 50
+    /**
+     * Default width of the left panel. Uses px as unit when @prop useAbsolute 
+     * is set and uses % if @prop useAbsolute is false
+     * @default 50
+     */
     defaultWidth?: number
 
-    // Optional - Width of parent element; used to calc left panel width
-    // when useAbsolute flag is NOT set
-    // Default: window.innerWidth
-    parentWidth?: number
+    /**
+     * Width of parent element; used to calc left panel width.
+     * window.innerWidth is used if @prop useAbsolute is false and 
+     * the default value is used
+     * @default null
+     * @require useAbsolute is false 
+     */
+    parentWidth?: number | null
 
-    // Optional - Minimum width (px) of left panel
-    // Only use when useAbsolute flag is set
-    // Default: 0
+
+    /**
+     * Minimum width (px) of left panel.
+     * @default 0
+     * @require useAbsolute is true
+     */
     minWidthPx?: number
 
-    // Optional - Color of the resize dragger
-    // Default: black
+    /**
+     * Color of the resize dragger
+     * @default black
+     */
     draggerColor?: string
 
-    // Optional - Width (px) of the resize dragger
-    // Default: 4
+    /**
+     * Width (px) of the resize dragger
+     * @default 4
+     */
     draggerWidth?: number
 
-    // Optional - Will collapse left panel if user slides drager so left
-    // panel is smaller than minWidthPx
-    // Default: false
+    /**
+     * Will collapse the left panel if the user slides the dragger
+     * such that the left panel is smaller than minWidthPx
+     * @default false
+     */
     collapseLeftPanel?: boolean
 }
 
@@ -54,7 +79,7 @@ const Resizable: React.FC<ResizableProps> = ({
     useAbsolute = false,
     defaultWidth = 50,
     minWidthPx = 0,
-    // parentWidth = window.innerWidth,
+    parentWidth = null,
     draggerColor = '#000000',
     collapseLeftPanel = false,
     draggerWidth = 4
@@ -65,7 +90,7 @@ const Resizable: React.FC<ResizableProps> = ({
     const [startWidth, setStartWidth] = useState<number>(0);
 
     useEffect(() => {
-        setStartWidth(window.innerWidth * (width / 100));
+        setStartWidth(parentWidth ? parentWidth : window.innerWidth * (width / 100));
     }, [])
 
     useEffect(() => {
@@ -75,7 +100,7 @@ const Resizable: React.FC<ResizableProps> = ({
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
         setStartX(e.clientX);
-        setStartWidth(useAbsolute ? width : window.innerWidth * (width / 100));
+        setStartWidth(useAbsolute ? width : (parentWidth ? parentWidth : window.innerWidth) * (width / 100));
         setMouseDown(true);
         e.preventDefault();
     };
@@ -83,7 +108,7 @@ const Resizable: React.FC<ResizableProps> = ({
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (mouseDown) {
             const deltaX = e.clientX - startX;
-            const newWidthPercent = (startWidth + deltaX) / window.innerWidth * 100;
+            const newWidthPercent = (startWidth + deltaX) / (parentWidth ? parentWidth : window.innerWidth) * 100;
             let newWidthPixel = Math.max(startWidth + deltaX, minWidthPx)
 
 
@@ -96,7 +121,6 @@ const Resizable: React.FC<ResizableProps> = ({
             } else if (width == 0) {
                 setDisplayLeftPanel(true);
             }
-
             setWidth(useAbsolute ? newWidthPixel : newWidthPercent)
         }
     };

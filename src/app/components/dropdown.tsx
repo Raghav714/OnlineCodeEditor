@@ -12,14 +12,12 @@ interface DropdownProps {
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ isOpen, actions }) => {
-
-
     return (
         <div className={`dropdown-outer-container`}>
             <div className={`${isOpen ? 'dropdown-visible' : 'dropdown-hidden'} dropdown-container`}>
-                {actions?.map((action: ActionItem) => {
+                {actions?.map((action: ActionItem, idx: number) => {
                     return (
-                        <div className="action-item-container" onClick={action.action}>
+                        <div key={idx} className="action-item-container" onClick={action.action}>
                             {action.tag}
                         </div>
                     )

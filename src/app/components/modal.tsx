@@ -1,13 +1,46 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect, useContext, ReactNode } from "react";
 import '../styles/modal.css';
 
 
 interface LoginProps {
+    content: ReactNode,
     isOpen: boolean,
-    setIsOpen: (isOpen: boolean) => void
+    setIsOpen: (isOpen: boolean) => void,
+
+    /**
+     * Width
+     * @default auto
+     */
+    width?: string,
+
+    /**
+     * Height
+     * @default auto
+     */
+    height?: string,
+
+    /**
+     * Minimum width
+     * @default none
+     */
+    minWidth?: string,
+
+    /**
+     * Minimum height
+     * @default none
+     */
+    maxWidth?: string,
 }
 
-const Modal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
+const Modal: React.FC<LoginProps> = ({
+    content,
+    isOpen,
+    setIsOpen,
+    width = 'auto',
+    height = 'auto',
+    minWidth = 'none',
+    maxWidth = 'none',
+}) => {
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -21,12 +54,19 @@ const Modal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
         return () => { document.removeEventListener('mousedown', handleClickOutside); };
     })
 
-
-
     return (
         <div className={`outer-modal-container ${isOpen ? `visible` : `hidden`}`}>
-            <div className='modal-container' ref={modalRef}>
-
+            <div
+                className='modal-container'
+                ref={modalRef}
+                style={{
+                    width: width,
+                    height: height,
+                    minWidth: minWidth,
+                    maxWidth: maxWidth,
+                }}
+            >
+                {content}
             </div>
         </div >
     )

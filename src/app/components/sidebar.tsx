@@ -42,13 +42,14 @@ const Sidebar: React.FC = () => {
         isSidebarOpen: isSidebarOpen,
     } = useContext(LayoutContext);
 
+    const fetchData = async () => {
+        if (isSignedIn) {
+            let data = await getPythonFiles(userId);
+            setFiles(data);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            if (isSignedIn) {
-                let data = await getPythonFiles(userId);
-                setFiles(data);
-            }
-        };
+
         fetchData();
     }, [userId, fileId]);
 
@@ -81,6 +82,11 @@ const Sidebar: React.FC = () => {
         }
     }
 
+    const handleDeleteFile = (id: string) => {
+        const updatedFiles = files.filter((file: any) => file.id !== id);
+        setFiles(updatedFiles);
+    }
+
 
     return (
         <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container dull`}
@@ -102,8 +108,8 @@ const Sidebar: React.FC = () => {
                         id={file.id}
                         title={file.title}
                         code={file.code}
+                        handleDeleteFile={handleDeleteFile}
                     />
-
                 })
             }
             {showInput && (
