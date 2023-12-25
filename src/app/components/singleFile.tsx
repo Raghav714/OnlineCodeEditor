@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { FileContext, ThemeContext } from "../resources/contexts";
 import { createPortal } from "react-dom";
-import { ThemeBackgroundMap } from "../resources/themes";
+import { ThemeBackgroundMap, ThemeColorMap } from "../resources/themes";
 import OptionsIcon from '../assets/options-icon.png';
 import Dropdown from "./dropdown";
 import Modal from "./modal";
@@ -35,10 +35,18 @@ interface SingleFileProps {
     code: string,
     handleDeleteFile: (id: string) => void
     handleRenameFile: (id: string, title: string) => void
+    onClick: () => void;
 }
 
 
-const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFile, handleRenameFile }) => {
+const SingleFile: React.FC<SingleFileProps> = ({
+    id,
+    title,
+    code,
+    handleDeleteFile,
+    handleRenameFile,
+    onClick
+}) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
     const [isRenaming, setIsRenaming] = useState<boolean>(false);
@@ -62,7 +70,7 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFi
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, []);
+    }, [title]);
 
     const handleFileClick = () => {
         setFileId(id)
@@ -96,17 +104,29 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFi
 
     const renameFile = (e: React.KeyboardEvent) => {
         if (e.key == "Enter") {
-            renamePythonFile(id, newFilename);
-            handleRenameFile(id, newFilename);
-            setIsRenaming(false);
+            renameFileAction();
         }
+    }
+    const renameFileAction = async () => {
+        if (newFilename == "") {
+            setNewFilename(title);
+            setIsRenaming(false);
+        } else {
+            await renamePythonFile(id, newFilename);
+            handleRenameFile(id, newFilename);
+        }
+        setIsRenaming(false);
     }
 
     return (
-        <div className="single-file-outer-container">
+        <div className="single-file-outer-container" onClick={onClick}>
             {isRenaming ?
                 <input
                     type="text"
+                    className="sidebar-input-form"
+                    style={{
+                        color: ThemeColorMap[theme][1][2].value.specs[2].color
+                    }}
                     value={newFilename}
                     ref={inputRef}
                     onChange={(e) => setNewFilename(e.target.value)}
@@ -116,10 +136,13 @@ const SingleFile: React.FC<SingleFileProps> = ({ id, title, code, handleDeleteFi
                 :
                 <div className="single-file-container"
                     onClick={handleFileClick}
-                    style={{ backgroundColor: ThemeBackgroundMap[theme].background }}
+                    style={{
+                        backgroundColor: ThemeBackgroundMap[theme].background,
+                        color: ThemeColorMap[theme][1][2].value.specs[2].color,
+                    }}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <h4 className="dull">{title}</h4>
+                    <h4 className="">{title}</h4>
                     <div
                         className="sidebar-options-container"
                         style={{ backgroundColor: ThemeBackgroundMap[theme].background }}

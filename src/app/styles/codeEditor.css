@@ -19,6 +19,13 @@
     flex-direction: row;
 }
 
+.file-title-tab {
+    padding: 0.2em 0.2em 0.3em 0.2em;
+    background-color: transparent;
+    font-style: italic;
+    letter-spacing: 0.5pt;
+}
+
 
 .sidemirror-container {
     height: 100%;
@@ -29,8 +36,11 @@
     border-right: 1px solid black;
 }
 
+
+
 .sidebar-header {
     margin: 0em 0em 0.5em 0em;
+    letter-spacing: 0.5pt;
     padding: 0;
     position: relative;
     width: 100%;
@@ -117,4 +127,15 @@
 
 .confirm-delete-container>h4 {
     margin: 1em 0em;
+}
+
+.sidebar-input-form {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 12pt;
+    padding-left: 0.6em;
+    margin: 0.3em 0em;
+    width: 100%;
+    filter: brightness(90%);
 }

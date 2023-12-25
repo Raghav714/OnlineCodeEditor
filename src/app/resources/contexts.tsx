@@ -46,13 +46,15 @@ interface FileContextType {
     fileSelected: boolean,
     fileId: string,
     setFileId: (id: string) => void,
-    setCode: (code: string) => void
+    setFileTitle: (name: string) => void,
+    setCode: (code: string) => void,
 }
 
 export const FileContext = createContext<FileContextType>({
     fileSelected: false,
     fileId: "",
     setFileId: () => { },
+    setFileTitle: () => { },
     setCode: () => { }
 })
 

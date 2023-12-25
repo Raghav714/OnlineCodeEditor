@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView } from '@uiw/react-codemirror';
 import { LayoutContext, ThemeContext, AuthContext, FileContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
-import { ThemeMap, ThemeBackgroundMap } from "../resources/themes";
+import { ThemeMap, ThemeBackgroundMap, ThemeColorMap } from "../resources/themes";
 import PocketBase from 'pocketbase';
 import "../styles/codeEditor.css"
 import Sidebar from "./sidebar";
@@ -23,6 +23,7 @@ async function savePythonFile(fileId: string, pyCode: string) {
         return null
     }
 }
+
 async function getPythonFiles(userId: string) {
     if (pb.authStore.isValid) {
         const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'` });
@@ -39,7 +40,8 @@ interface CodeEditorProps {
 const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [code, setCode] = useState<string>("");
     const [fileSelected, setFileSelected] = useState<boolean>(false)
-    const [fileId, setFileId] = useState<string>("")
+    const [fileId, setFileId] = useState<string>("");
+    const [fileTitle, setFileTitle] = useState<string>("");
     const {
         value: isMinimal,
         isSidebarOpen: isSidebarOpen,
@@ -55,6 +57,13 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         }
     }, [isSignedIn])
 
+    useEffect(() => {
+        let dk = ThemeColorMap[theme][1][2].value.specs[1].color
+        console.log(dk)
+    }, [])
+
+
+
 
     const handleSaveFile = async () => {
         await savePythonFile(fileId, code);
@@ -66,10 +75,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 handleSaveFile();
             }
         }
-
         window.addEventListener('keydown', handleKeyDown);
         return () => { window.removeEventListener('keydown', handleKeyDown) }
     }, [fileId, code, savePythonFile])
+
 
 
 
@@ -109,11 +118,15 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         setIsSidebarOpen(!isSidebarOpen)
     }
 
-
-    useEffect(() => {
-        console.log(ThemeBackgroundMap[theme])
-    }, [])
-
+    function darkenHexColor(col: string, amt: number): string {
+        col = col.slice(1);
+        var num = parseInt(col, 16);
+        var r = (num >> 16) + amt;
+        var b = ((num >> 8) & 0x00FF) + amt;
+        var g = (num & 0x0000FF) + amt;
+        var newColor = g | (b << 8) | (r << 16);
+        return '#' + newColor.toString(16);
+    }
 
 
     return (
@@ -132,29 +145,41 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                     fileId: fileId,
                     setFileId: setFileId,
                     setCode: setCode,
+                    setFileTitle: setFileTitle,
                 }}
+
                 >
                     <Resizable
                         leftPanel={<Sidebar />}
                         rightPanel={
-                            <CodeMirror
-                                className="editor"
+                            <>
+                                <div className="file-title-tab"
+                                    style={{
+                                        backgroundColor: ThemeBackgroundMap[theme].background,
+                                        color: darkenHexColor(ThemeBackgroundMap[theme].background, 45),
+                                    }}>
+                                    {fileTitle}
+                                </div>
+                                <CodeMirror
+                                    className="editor"
 
-                                value={code}
-                                onChange={setCode}
-                                extensions={[
-                                    python(),
-                                    customKeymap,
-                                    // EditorView.lineWrapping
-                                ]}
-                                height="100%"
-                                theme={ThemeMap[theme]}
-                                basicSetup={{
-                                    lineNumbers: true,
-                                    allowMultipleSelections: true,
-                                    tabSize: 5,
-                                }}
-                            />
+                                    value={code}
+                                    onChange={setCode}
+                                    extensions={[
+                                        python(),
+                                        customKeymap,
+                                        // EditorView.lineWrapping
+                                    ]}
+                                    height="100%"
+                                    theme={ThemeMap[theme]}
+                                    basicSetup={{
+                                        lineNumbers: true,
+                                        allowMultipleSelections: true,
+                                        tabSize: 5,
+                                    }}
+
+                                />
+                            </>
                         }
                         displayLeftPanel={isSidebarOpen}
                         setDisplayLeftPanel={setIsSidebarOpen}
@@ -170,4 +195,5 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         </div>
     )
 }
+
 export default CodeEditor;

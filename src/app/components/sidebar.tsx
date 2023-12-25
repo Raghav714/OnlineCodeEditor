@@ -3,7 +3,7 @@ import { AuthContext, LayoutContext, FileContext, ThemeContext } from '../resour
 import '../styles/codeEditor.css';
 import PocketBase from 'pocketbase';
 import SingleFile from './singleFile';
-import { ThemeBackgroundMap } from '../resources/themes';
+import { ThemeBackgroundMap, ThemeColorMap } from '../resources/themes';
 const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
 const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
 
@@ -36,7 +36,11 @@ const Sidebar: React.FC = () => {
     const [showInput, setShowInput] = useState<boolean>(false);
     const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
     const { value: theme } = useContext(ThemeContext)
-    const { fileId: fileId, setFileId: setFileId, setCode: setCode } = useContext(FileContext)
+    const {
+        fileId: fileId,
+        setFileId: setFileId,
+        setCode: setCode,
+        setFileTitle: setFileTitle } = useContext(FileContext)
     const {
         value: isMinimal,
         isSidebarOpen: isSidebarOpen,
@@ -48,8 +52,9 @@ const Sidebar: React.FC = () => {
             setFiles(data);
         }
     };
-    useEffect(() => {
 
+    useEffect(() => {
+        console.log(fileId)
         fetchData();
     }, [userId, fileId]);
 
@@ -71,21 +76,24 @@ const Sidebar: React.FC = () => {
         setShowInput(true)
     }
 
-    const submitFile = async (e: React.KeyboardEvent) => {
+    const handleSubmitFile = async (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
             const newFile = await addPythonFile(userId, title);
             setFiles([...files, newFile]);
             setFileId(newFile.id);
+            setFileTitle(newFile.title);
             setCode("");
             setTitle("");
             setShowInput(false);
         }
     }
 
+
     const handleDeleteFile = (id: string) => {
         const updatedFiles = files.filter((file: any) => file.id !== id);
         setFiles(updatedFiles);
     }
+
     const handleRenameFile = (id: string, newTitle: string) => {
         const updatedFiles = files.map((file: any) => {
             if (file.id === id) {
@@ -93,7 +101,9 @@ const Sidebar: React.FC = () => {
             }
             return file;
         });
-        console.log(files)
+        if (fileId == id) {
+            setFileTitle(newTitle);
+        }
         setFiles(updatedFiles);
     }
 
@@ -102,11 +112,11 @@ const Sidebar: React.FC = () => {
         <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container dull`}
             style={{
                 backgroundColor: ThemeBackgroundMap[theme].background,
-                color: ThemeBackgroundMap[theme].gutterActiveForeground,
+                color: ThemeColorMap[theme][1][2].value.specs[2].color,
                 borderRight: `2px solid ${ThemeBackgroundMap[theme].gutterForeground}`
             }}>
             <div className="sidebar-header">
-                <h3 className='' style={{ borderBottom: `1px solid ${ThemeBackgroundMap[theme].gutterForeground}` }}>
+                <h3 className='bright' style={{ borderBottom: `1px solid ${ThemeBackgroundMap[theme].gutterForeground}` }}>
                     Files
                 </h3>
                 <button onClick={addFile} className='add-file-button'>+</button>
@@ -115,9 +125,13 @@ const Sidebar: React.FC = () => {
                 files?.map((file: any) => {
                     return <SingleFile
                         key={file.id}
+
+                        //Change So this uses context to get this maybe??
                         id={file.id}
                         title={file.title}
+
                         code={file.code}
+                        onClick={() => setFileTitle(file.title)}
                         handleDeleteFile={handleDeleteFile}
                         handleRenameFile={handleRenameFile}
                     />
@@ -128,8 +142,13 @@ const Sidebar: React.FC = () => {
                     type="text"
                     value={title}
                     ref={inputRef}
+                    placeholder='Enter Filename'
+                    style={{
+                        color: ThemeColorMap[theme][1][2].value.specs[2].color,
+                    }}
+                    className="sidebar-input-form"
                     onChange={(e) => setTitle(e.target.value)}
-                    onKeyDown={submitFile}
+                    onKeyDown={handleSubmitFile}
                     autoFocus
                 />
             )}
