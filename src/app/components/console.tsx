@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { ThemeContext } from '../resources/contexts';
 import { ThemeMap } from "../resources/themes";
@@ -8,7 +8,7 @@ interface ConsoleOutputProps {
     output: string
 }
 const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
-    const { value: theme, setValue: setTheme } = useContext(ThemeContext);
+    const { value: theme, textColor: textColor } = useContext(ThemeContext);
 
     return (
         <div className="console-container">

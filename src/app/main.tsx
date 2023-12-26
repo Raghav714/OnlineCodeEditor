@@ -1,25 +1,18 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { LayoutContext, ThemeContext, AuthContext } from "./resources/contexts";
+import { logout } from "./resources/pocketbase";
+import { ThemeBackgroundMap, ThemeColorMap } from "./resources/themes";
 import Resizable from "./components/resizable";
 import CodeEditor from "./components/codeEditor";
 import Console from './components/console';
 import SettingsModal from './components/settingsModal';
 import AccountModal from './components/accountModal';
-import './styles/main.css';
 import InfoIcon from './assets/info-icon.png';
 import AccountIcon from './assets/account-icon.png';
-import PocketBase from 'pocketbase';
-const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
-const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
+import './styles/main.css';
 
-async function logout() {
-    try {
-        pb.authStore.clear();
-    } catch (error) {
-        console.error('Error logging out', error);
-    }
-}
+
 
 const Home: React.FC = () => {
     const [consoleOutput, setConsoleOutput] = useState<string>("");
@@ -34,6 +27,8 @@ const Home: React.FC = () => {
     const [isMinimal, setIsMinimal] = useState<boolean>(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
     const [theme, setTheme] = useState<string>("nord");
+    const [backgroundColor, setBackgroundColor] = useState<string>(ThemeBackgroundMap["nord"].background);
+    const [textColor, setTextColor] = useState<string>(ThemeColorMap["nord"][1][2].value.specs[2].color);
 
     useEffect(() => {
         const handleKeyUp = (e: KeyboardEvent) => {
@@ -66,6 +61,11 @@ const Home: React.FC = () => {
 
     }, [])
 
+    useEffect(() => {
+        setBackgroundColor(ThemeBackgroundMap[theme].background);
+        setTextColor(ThemeColorMap[theme][1][2].value.specs[2].color)
+    }, [theme])
+
 
     const handleLogin = () => {
         setIsLoginOpen(prev => !prev);
@@ -77,6 +77,7 @@ const Home: React.FC = () => {
         setIsLogoutOpen(false);
         setIsSignedIn(false);
         setUserId("");
+        setConsoleOutput("");
         logout();
     }
 
@@ -97,7 +98,9 @@ const Home: React.FC = () => {
                 }} >
                     <ThemeContext.Provider value={{
                         value: theme,
-                        setValue: setTheme
+                        setValue: setTheme,
+                        backgroundColor: backgroundColor,
+                        textColor: textColor,
                     }} >
                         <SettingsModal
                             isOpen={isSettingsOpen}

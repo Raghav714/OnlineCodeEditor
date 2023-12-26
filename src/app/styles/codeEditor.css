@@ -19,10 +19,16 @@
     flex-direction: row;
 }
 
+.tab-editor-container {
+    height: 100%;
+    overflow-y: hidden;
+}
+
 .file-title-tab {
     padding: 0.2em 0.2em 0.3em 0.2em;
     background-color: transparent;
     font-style: italic;
+    font-size: 13pt;
     letter-spacing: 0.5pt;
 }
 

@@ -1,43 +1,9 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { AuthContext } from "../resources/contexts";
-import '../styles/SettingsLogin.css';
+import { login, createUser } from "../resources/pocketbase";
 import LoginForm from "./loginForm";
 import CreateAccountForm from "./createAccountForm";
-import PocketBase from 'pocketbase';
-const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
-const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
-
-async function checkAuth(email: string, password: string) {
-    try {
-        const authData = await pb.collection('users').authWithPassword(email, password);
-
-        if (pb.authStore.isValid) {
-            return {
-                isValid: true,
-                userId: pb.authStore.model?.id,
-            }
-        } else {
-            return null
-        }
-    } catch (error) {
-        console.error('Errorrr logging in:', error);
-        return null;
-    }
-}
-
-async function createUser(email: string, password: string, passwordConfirm: string) {
-    try {
-        const user = await pb.collection('users').create({
-            "email": email,
-            "password": password,
-            "passwordConfirm": passwordConfirm,
-        });
-        return user;
-    } catch (error) {
-        console.error('Error in creating account', error);
-        return null;
-    }
-}
+import '../styles/SettingsLogin.css';
 
 interface LoginProps {
     isOpen: boolean,
@@ -52,8 +18,8 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     } = useContext(AuthContext);
     const modalRef = useRef<HTMLDivElement>(null);
 
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [email, setEmail] = useState<string>("test@gmail.com");
+    const [password, setPassword] = useState<string>("test123");
     const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [displayLogin, setDisplayLogin] = useState<boolean>(true);
     const [isLoginErrorDisplayed, setIsLoginErrorDisplayed] = useState<boolean>(false)
@@ -65,7 +31,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
                 setDisplayLogin(true);
-                // resetState();
+                resetState();
             }
         };
 
@@ -74,7 +40,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     })
 
     const handleSubmit = async () => {
-        const files = await checkAuth(email, password);
+        const files = await login(email, password);
         if (files) {
             setIsSignedIn(true);
             setIsLoginErrorDisplayed(false);
@@ -96,7 +62,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     }
 
     const handleToggleLoginCreate = () => {
-        // resetState();
+        resetState();
         setDisplayLogin(prev => !prev)
     }
 

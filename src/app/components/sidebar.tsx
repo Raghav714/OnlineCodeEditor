@@ -1,33 +1,9 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
 import { AuthContext, LayoutContext, FileContext, ThemeContext } from '../resources/contexts';
+import { ThemeBackgroundMap } from '../resources/themes';
+import { addPythonFile, getPythonFiles } from '../resources/pocketbase';
 import '../styles/codeEditor.css';
-import PocketBase from 'pocketbase';
 import SingleFile from './singleFile';
-import { ThemeBackgroundMap, ThemeColorMap } from '../resources/themes';
-const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
-const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
-
-async function getPythonFiles(userId: string) {
-    if (!pb.authStore.isValid) {
-        return null;
-    }
-
-    try {
-        const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'`, requestKey: null });
-        return data?.items as any[];
-    } catch (error) {
-        console.error('Error fetching Python files:', error);
-        return null;
-    }
-}
-
-async function addPythonFile(userId: string, title: string) {
-    const record = await pb.collection('python_files').create({
-        title: title,
-        user: userId,
-    });
-    return record;
-}
 
 const Sidebar: React.FC = () => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -35,16 +11,13 @@ const Sidebar: React.FC = () => {
     const [title, setTitle] = useState<string>("");
     const [showInput, setShowInput] = useState<boolean>(false);
     const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
-    const { value: theme } = useContext(ThemeContext)
+    const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext)
+    const { isSidebarOpen: isSidebarOpen } = useContext(LayoutContext);
     const {
         fileId: fileId,
         setFileId: setFileId,
         setCode: setCode,
         setFileTitle: setFileTitle } = useContext(FileContext)
-    const {
-        value: isMinimal,
-        isSidebarOpen: isSidebarOpen,
-    } = useContext(LayoutContext);
 
     const fetchData = async () => {
         if (isSignedIn) {
@@ -54,8 +27,13 @@ const Sidebar: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log(fileId)
-        fetchData();
+        if (!userId) {
+            setCode("");
+            setFileTitle("")
+            setFiles([])
+        } else {
+            fetchData();
+        }
     }, [userId, fileId]);
 
 
@@ -79,18 +57,24 @@ const Sidebar: React.FC = () => {
     const handleSubmitFile = async (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
             const newFile = await addPythonFile(userId, title);
-            setFiles([...files, newFile]);
-            setFileId(newFile.id);
-            setFileTitle(newFile.title);
-            setCode("");
-            setTitle("");
-            setShowInput(false);
+            if (!newFile)
+                console.error("Error creating new file")
+            else {
+                setFiles([...files, newFile]);
+                setFileId(newFile.id);
+                setFileTitle(newFile.title);
+                setCode("");
+                setTitle("");
+                setShowInput(false);
+            }
         }
     }
 
 
     const handleDeleteFile = (id: string) => {
         const updatedFiles = files.filter((file: any) => file.id !== id);
+        setCode("");
+        setFileTitle("")
         setFiles(updatedFiles);
     }
 
@@ -111,8 +95,8 @@ const Sidebar: React.FC = () => {
     return (
         <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container dull`}
             style={{
-                backgroundColor: ThemeBackgroundMap[theme].background,
-                color: ThemeColorMap[theme][1][2].value.specs[2].color,
+                backgroundColor: backgroundColor,
+                color: textColor,
                 borderRight: `2px solid ${ThemeBackgroundMap[theme].gutterForeground}`
             }}>
             <div className="sidebar-header">
@@ -144,7 +128,7 @@ const Sidebar: React.FC = () => {
                     ref={inputRef}
                     placeholder='Enter Filename'
                     style={{
-                        color: ThemeColorMap[theme][1][2].value.specs[2].color,
+                        color: textColor,
                     }}
                     className="sidebar-input-form"
                     onChange={(e) => setTitle(e.target.value)}

@@ -1,33 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { FileContext, ThemeContext } from "../resources/contexts";
 import { createPortal } from "react-dom";
-import { ThemeBackgroundMap, ThemeColorMap } from "../resources/themes";
+import { deletePythonFile, renamePythonFile } from "../resources/pocketbase";
 import OptionsIcon from '../assets/options-icon.png';
 import Dropdown from "./dropdown";
 import Modal from "./modal";
-import PocketBase from 'pocketbase';
 import '../styles/codeEditor.css';
 
-
-const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
-const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
-
-async function deletePythonFile(fileId: string) {
-    if (pb.authStore.isValid) {
-        let record = await pb.collection('python_files').delete(fileId);
-        return record;
-    } else {
-        return null
-    }
-}
-async function renamePythonFile(fileId: string, newTitle: string) {
-    if (pb.authStore.isValid) {
-        let record = await pb.collection('python_files').update(fileId, { title: newTitle });
-        return record;
-    } else {
-        return null
-    }
-}
 
 interface SingleFileProps {
     id: string,
@@ -55,7 +34,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
 
 
     const { setCode: setCode, setFileId } = useContext(FileContext);
-    const { value: theme } = useContext(ThemeContext);
+    const { backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
 
 
     useEffect(() => {
@@ -125,7 +104,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
                     type="text"
                     className="sidebar-input-form"
                     style={{
-                        color: ThemeColorMap[theme][1][2].value.specs[2].color
+                        color: textColor
                     }}
                     value={newFilename}
                     ref={inputRef}
@@ -137,15 +116,15 @@ const SingleFile: React.FC<SingleFileProps> = ({
                 <div className="single-file-container"
                     onClick={handleFileClick}
                     style={{
-                        backgroundColor: ThemeBackgroundMap[theme].background,
-                        color: ThemeColorMap[theme][1][2].value.specs[2].color,
+                        backgroundColor: backgroundColor,
+                        color: textColor,
                     }}
                     onMouseLeave={handleMouseLeave}
                 >
                     <h4 className="">{title}</h4>
                     <div
                         className="sidebar-options-container"
-                        style={{ backgroundColor: ThemeBackgroundMap[theme].background }}
+                        style={{ backgroundColor: backgroundColor }}
                         onClick={handleOptionsDropdown}
                     >
                         <img

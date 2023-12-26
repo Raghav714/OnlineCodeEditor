@@ -22,10 +22,25 @@
 .modal-container {
     border-radius: 0.2em;
     background-color: rgb(232, 232, 232);
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 5;
     padding: 2.5em;
+}
+
+.close-modal-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.2em;
+    height: 1em;
+    width: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: gray;
 }

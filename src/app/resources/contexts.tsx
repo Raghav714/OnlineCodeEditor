@@ -18,11 +18,15 @@ export const LayoutContext = createContext<LayoutContextType>({
 interface ThemeContextType {
     value: string,
     setValue: (value: string) => void;
+    backgroundColor: string,
+    textColor: string
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
     value: "",
-    setValue: () => { }
+    setValue: () => { },
+    backgroundColor: "#000000",
+    textColor: "#FFFFFF",
 })
 
 

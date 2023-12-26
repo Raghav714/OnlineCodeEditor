@@ -1,7 +1,5 @@
-import React, { useRef, useState, useEffect, useContext, ReactNode } from "react";
+import React, { useRef, useEffect, ReactNode } from "react";
 import '../styles/modal.css';
-
-
 interface LoginProps {
     content: ReactNode,
     isOpen: boolean,
@@ -67,6 +65,7 @@ const Modal: React.FC<LoginProps> = ({
                 }}
             >
                 {content}
+                <div className="close-modal-button" onClick={() => setIsOpen(false)}>x</div>
             </div>
         </div >
     )

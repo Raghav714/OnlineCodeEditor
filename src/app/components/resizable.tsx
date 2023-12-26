@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useRef, useEffect } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import '../styles/resizable.css'
 
 /**

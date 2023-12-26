@@ -2,36 +2,14 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView } from '@uiw/react-codemirror';
 import { LayoutContext, ThemeContext, AuthContext, FileContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
-import { ThemeMap, ThemeBackgroundMap, ThemeColorMap } from "../resources/themes";
-import PocketBase from 'pocketbase';
-import "../styles/codeEditor.css"
+import { ThemeMap } from "../resources/themes";
+import { savePythonFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
 import Resizable from "./resizable";
-import { PluginValue, lineNumberMarkers } from '@codemirror/view';
+import "../styles/codeEditor.css"
+
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
-const NEXT_PUBLIC_POCKETBASE_URL = process.env.NEXT_PUBLIC_POCKETBASE_URL
-const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
-
-async function savePythonFile(fileId: string, pyCode: string) {
-    if (pb.authStore.isValid) {
-        const record = await pb.collection('python_files').update(fileId, {
-            code: pyCode,
-        });
-        return record;
-    } else {
-        return null
-    }
-}
-
-async function getPythonFiles(userId: string) {
-    if (pb.authStore.isValid) {
-        const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'` });
-        return data?.items as any[];
-    } else {
-        return null
-    }
-}
 
 interface CodeEditorProps {
     setOutput: (code: string) => void;
@@ -47,8 +25,19 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         isSidebarOpen: isSidebarOpen,
         setIsSidebarOpen: setIsSidebarOpen
     } = useContext(LayoutContext);
-    const { value: theme } = useContext(ThemeContext);
+    const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
     const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
+
+    useEffect(() => {
+        const createBackendConnection = async () => {
+            try {
+                await fetch(`${NEXT_PUBLIC_API_URL}`);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        createBackendConnection();
+    }, [])
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -56,14 +45,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
             setCode("");
         }
     }, [isSignedIn])
-
-    useEffect(() => {
-        let dk = ThemeColorMap[theme][1][2].value.specs[1].color
-        console.log(dk)
-    }, [])
-
-
-
 
     const handleSaveFile = async () => {
         await savePythonFile(fileId, code);
@@ -78,8 +59,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         window.addEventListener('keydown', handleKeyDown);
         return () => { window.removeEventListener('keydown', handleKeyDown) }
     }, [fileId, code, savePythonFile])
-
-
 
 
 
@@ -152,11 +131,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                     <Resizable
                         leftPanel={<Sidebar />}
                         rightPanel={
-                            <>
+                            <div className="tab-editor-container">
                                 <div className="file-title-tab"
                                     style={{
-                                        backgroundColor: ThemeBackgroundMap[theme].background,
-                                        color: darkenHexColor(ThemeBackgroundMap[theme].background, 45),
+                                        backgroundColor: backgroundColor,
+                                        color: darkenHexColor(backgroundColor, 70),
                                     }}>
                                     {fileTitle}
                                 </div>
@@ -179,14 +158,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                     }}
 
                                 />
-                            </>
+                            </div>
                         }
                         displayLeftPanel={isSidebarOpen}
                         setDisplayLeftPanel={setIsSidebarOpen}
                         defaultWidth={160}
                         minWidthPx={120}
                         draggerWidth={7}
-                        draggerColor={ThemeBackgroundMap[theme].background}
+                        draggerColor={backgroundColor}
                         useAbsolute
                         collapseLeftPanel
                     />
