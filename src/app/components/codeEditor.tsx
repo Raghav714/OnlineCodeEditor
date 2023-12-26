@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import CodeMirror, { keymap, Command, EditorView } from '@uiw/react-codemirror';
+import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin } from '@uiw/react-codemirror';
 import { LayoutContext, ThemeContext, AuthContext, FileContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
 import { ThemeMap } from "../resources/themes";
@@ -10,6 +10,42 @@ import "../styles/codeEditor.css"
 
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
+
+const bracketSpacing = Decoration.mark({
+    class: 'cm-bracket-spacing'
+});
+
+function bracketSpacingPlugin() {
+    return ViewPlugin.fromClass(class {
+        decorations;
+
+        constructor(view: any) {
+            this.decorations = this.findBrackets(view);
+        }
+
+        update(update: { docChanged: any; viewportChanged: any; view: any; }) {
+            if (update.docChanged || update.viewportChanged) {
+                this.decorations = this.findBrackets(update.view);
+            }
+        }
+
+        findBrackets(view: { visibleRanges: any; state: { doc: { sliceString: (arg0: any, arg1: any) => any; }; }; }) {
+            const ranges = [];
+
+            for (const { from, to } of view.visibleRanges) {
+                for (let pos = from; pos <= to; pos++) {
+                    const char = view.state.doc.sliceString(pos, pos + 1);
+                    if (['(', ')', '[', ']', '{', '}', ':'].includes(char)) {
+                        ranges.push(bracketSpacing.range(pos - 1, pos + 1));
+                    }
+                }
+            }
+            return Decoration.set(ranges);
+        }
+    }, {
+        decorations: v => v.decorations
+    });
+}
 
 interface CodeEditorProps {
     setOutput: (code: string) => void;
@@ -114,7 +150,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 <button onClick={toggleSidebar} className={`submit-button run-button ${isSignedIn ? 'visible' : 'hidden'}`}>
                     Files
                 </button>
-                <button className="submit-button" onClick={runCode}>
+                <button className="run-code-button" onClick={runCode}>
                     Run
                 </button>
             </div>
@@ -141,11 +177,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                 </div>
                                 <CodeMirror
                                     className="editor"
-
                                     value={code}
                                     onChange={setCode}
                                     extensions={[
                                         python(),
+                                        bracketSpacingPlugin(),
                                         customKeymap,
                                         EditorView.lineWrapping
                                     ]}
