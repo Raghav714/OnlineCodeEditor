@@ -41,6 +41,7 @@ const Sidebar: React.FC = () => {
         function handleClickOutside(event: MouseEvent) {
             if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
                 setShowInput(false);
+                setTitle("");
             }
         }
 

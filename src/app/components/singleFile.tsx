@@ -138,6 +138,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
                                 { tag: "Rename", action: handleRename },
                                 { tag: "Delete", action: toggleConfirmDelete },
                             ]}
+                            position="right"
                         />
                         {createPortal(<Modal
                             content={<ConfirmDelete

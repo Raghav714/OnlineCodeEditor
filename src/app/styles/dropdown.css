@@ -2,22 +2,18 @@
     position: absolute;
     width: 0;
     height: 0;
-    top: 50%;
-    left: 100%;
     z-index: 1;
 }
 
 .dropdown-container {
     position: relative;
     top: 0;
-    left: 0em;
-    transform: translateY(-50%);
+    left: 0;
     height: fit-content;
     width: fit-content;
     background-color: white;
     z-index: 3;
     border-radius: 4px;
-
     display: flex;
     flex-direction: column;
 }
