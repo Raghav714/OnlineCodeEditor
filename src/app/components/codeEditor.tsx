@@ -56,6 +56,11 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [fileSelected, setFileSelected] = useState<boolean>(false)
     const [fileId, setFileId] = useState<string>("");
     const [fileTitle, setFileTitle] = useState<string>("");
+    const [showSavedDisplay, setShowSavedDisplay] = useState<boolean>(false);
+    const saveTimer = useRef<NodeJS.Timeout | null>(null);
+
+
+    //Contexts 
     const {
         value: isMinimal,
         isSidebarOpen: isSidebarOpen,
@@ -82,9 +87,34 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         }
     }, [isSignedIn])
 
+
+    useEffect(() => {
+        if (isSignedIn && fileId != "") {
+            setShowSavedDisplay(false);
+            if (saveTimer.current)
+                clearTimeout(saveTimer.current);
+            saveTimer.current = setTimeout(() => {
+                if (code !== '') {
+                    handleSaveFile();
+                    setShowSavedDisplay(true)
+                }
+            }, 2500);
+        }
+
+        return () => {
+            if (saveTimer.current) {
+                clearTimeout(saveTimer.current);
+            }
+        };
+    }, [code])
+    useEffect(() => {
+        setShowSavedDisplay(true);
+    }, [fileId])
+
     const handleSaveFile = async () => {
         await savePythonFile(fileId, code);
     }
+
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key == 's' && e.metaKey) {
@@ -144,6 +174,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     }
 
 
+
     return (
         <div className="code-editor-container">
             <div className={`${isMinimal ? 'hidden' : 'visible'}  editor-navbar-container`}>
@@ -173,7 +204,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         backgroundColor: backgroundColor,
                                         color: darkenHexColor(backgroundColor, 70),
                                     }}>
-                                    {fileTitle}
+                                    {(isSignedIn && fileTitle != "") && (showSavedDisplay ? fileTitle : 'Saving...')}
                                 </div>
                                 <CodeMirror
                                     className="editor"

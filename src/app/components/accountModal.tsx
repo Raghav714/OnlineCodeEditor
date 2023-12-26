@@ -18,8 +18,8 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     } = useContext(AuthContext);
     const modalRef = useRef<HTMLDivElement>(null);
 
-    const [email, setEmail] = useState<string>("test@gmail.com");
-    const [password, setPassword] = useState<string>("test123");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [displayLogin, setDisplayLogin] = useState<boolean>(true);
     const [isLoginErrorDisplayed, setIsLoginErrorDisplayed] = useState<boolean>(false)

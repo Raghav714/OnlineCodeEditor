@@ -97,6 +97,10 @@ const SingleFile: React.FC<SingleFileProps> = ({
         setIsRenaming(false);
     }
 
+    const toggleMoreInfo = () => {
+
+    }
+
     return (
         <div className="single-file-outer-container" onClick={onClick}>
             {isRenaming ?
@@ -137,6 +141,8 @@ const SingleFile: React.FC<SingleFileProps> = ({
                             actions={[
                                 { tag: "Rename", action: handleRename },
                                 { tag: "Delete", action: toggleConfirmDelete },
+                                { tag: "More info", action: toggleMoreInfo },
+
                             ]}
                             position="right"
                         />
