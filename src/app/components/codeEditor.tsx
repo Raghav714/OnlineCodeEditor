@@ -147,7 +147,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                     extensions={[
                                         python(),
                                         customKeymap,
-                                        // EditorView.lineWrapping
+                                        EditorView.lineWrapping
                                     ]}
                                     height="100%"
                                     theme={ThemeMap[theme]}
