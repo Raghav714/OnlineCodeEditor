@@ -98,7 +98,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                     handleSaveFile();
                     setShowSavedDisplay(true)
                 }
-            }, 2500);
+            }, 2000);
         }
 
         return () => {
@@ -223,7 +223,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         allowMultipleSelections: true,
                                         tabSize: 5,
                                     }}
-
+                                    autoFocus
                                 />
                             </div>
                         }
