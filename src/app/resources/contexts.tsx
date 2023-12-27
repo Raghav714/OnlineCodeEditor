@@ -1,14 +1,14 @@
 import React, { createContext } from "react";
 
 interface LayoutContextType {
-    value: boolean,
-    setValue: (value: boolean) => void;
+    isMinimal: boolean,
+    setIsMinimal: (value: boolean) => void;
     isSidebarOpen: boolean,
     setIsSidebarOpen: (value: boolean) => void;
 }
 export const LayoutContext = createContext<LayoutContextType>({
-    value: false,
-    setValue: () => { },
+    isMinimal: false,
+    setIsMinimal: () => { },
 
     isSidebarOpen: false,
     setIsSidebarOpen: () => { }

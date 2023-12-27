@@ -49,7 +49,6 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
         } else {
             setIsLoginErrorDisplayed(true)
         }
-
     }
 
     const handleCreateAccount = async () => {

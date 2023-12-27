@@ -9,12 +9,22 @@ async function login(email: string, password: string) {
         if (!pb.authStore.isValid)
             return null;
 
-
         return {
             isValid: true,
             userId: pb.authStore.model?.id,
         }
 
+    } catch (error) {
+        console.error('Error logging in:', error);
+        return null;
+    }
+}
+
+async function requestPasswordChange(email: string) {
+    try {
+        let result = await pb.collection('users').requestPasswordReset(email);
+        console.log(result)
+        return result
     } catch (error) {
         console.error('Error logging in:', error);
         return null;
@@ -27,7 +37,11 @@ async function createUser(email: string, password: string, passwordConfirm: stri
             "email": email,
             "password": password,
             "passwordConfirm": passwordConfirm,
+            "emailVisibility": true,
         });
+
+        console.log(email)
+
         return user;
     } catch (error) {
         console.error('Error in creating account', error);
@@ -116,6 +130,8 @@ async function renamePythonFile(fileId: string, newTitle: string) {
 
 export {
     login,
+    // authLogin,
+    requestPasswordChange,
     createUser,
     logout,
     getPythonFiles,

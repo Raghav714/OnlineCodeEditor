@@ -53,6 +53,7 @@
   display: flex;
 }
 
+
 .dull {
   filter: brightness(90%)
 }

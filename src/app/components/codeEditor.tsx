@@ -62,7 +62,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
 
     //Contexts 
     const {
-        value: isMinimal,
+        isMinimal: isMinimal,
         isSidebarOpen: isSidebarOpen,
         setIsSidebarOpen: setIsSidebarOpen
     } = useContext(LayoutContext);
@@ -107,6 +107,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
             }
         };
     }, [code])
+
     useEffect(() => {
         setShowSavedDisplay(true);
     }, [fileId])

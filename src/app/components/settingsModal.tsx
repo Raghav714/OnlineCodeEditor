@@ -8,7 +8,7 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
-    const { value: isMinimal, setValue: setIsMinimal } = useContext(LayoutContext);
+    const { isMinimal: isMinimal, setIsMinimal: setIsMinimal } = useContext(LayoutContext);
     const { value: theme, setValue: setTheme } = useContext(ThemeContext);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -47,12 +47,6 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                             <option value="quietlight">Quietlight</option>
                         </select>
                     </div>
-                    <div className="language-dropdown-container">
-                        <label htmlFor="language-select">Choose a language: </label>
-                        <select className="language-dropdown" id="language-select">
-                            <option value="nord">Python</option>
-                        </select>
-                    </div>
                     <div className="settings-key-mappings">
                         <h2>Key Mappings</h2>
                         <div className="key-mapping">
@@ -74,6 +68,10 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                         <div className="key-mapping">
                             <h3>Find and Replace</h3>
                             <h3>Cmd/Ctrl + F</h3>
+                        </div>
+                        <div className="key-mapping">
+                            <h3>Save File</h3>
+                            <h3>Cmd/Ctrl + S</h3>
                         </div>
                     </div>
                 </div>

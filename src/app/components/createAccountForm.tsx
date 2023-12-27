@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/SettingsLogin.css';
 
+
 interface CreateAccountFormProps {
     isOpen: boolean,
     email: string,
@@ -100,6 +101,7 @@ const CreateAccountForm: React.FC<CreateAccountFormProps> = ({
                 </form>
                 <div className={`${isErrorDisplayed ? 'visible' : 'hidden'} error-message`}>{errorMessage}</div>
                 <button onClick={valididateAndSubmit} className="login-button">Create Account</button>
+                {/* <button onClick={handleSubmit} className="login-button">Test</button> */}
                 <h4 onClick={handleSwitchToLogin} className="create-account-button">Back To Login</h4>
             </div>
         </div>

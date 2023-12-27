@@ -63,7 +63,7 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         setBackgroundColor(ThemeBackgroundMap[theme].background);
-        setTextColor(ThemeColorMap[theme][1][2].value.specs[2].color)
+        setTextColor(ThemeColorMap[theme][1][2].value.specs[2].color);
     }, [theme])
 
 
@@ -91,8 +91,8 @@ const Home: React.FC = () => {
                 setUserId: setUserId,
             }}>
                 <LayoutContext.Provider value={{
-                    value: isMinimal,
-                    setValue: setIsMinimal,
+                    isMinimal: isMinimal,
+                    setIsMinimal: setIsMinimal,
                     isSidebarOpen: isSidebarOpen,
                     setIsSidebarOpen: setIsSidebarOpen
                 }} >
