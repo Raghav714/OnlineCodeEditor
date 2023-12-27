@@ -44,6 +44,11 @@ const Home: React.FC = () => {
                 e.preventDefault();
                 setConsoleOutput("");
             }
+            if (e.key === 'o' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                setIsSidebarOpen(prev => !prev)
+            }
+
         }
 
         const handleCloseLogout = (event: MouseEvent) => {
@@ -82,7 +87,9 @@ const Home: React.FC = () => {
     }
 
     return (
-        <div className="main-container">
+        <div className="main-container"
+            style={{ backgroundColor: backgroundColor }}
+        >
             <title>Online Python Editor</title>
             <AuthContext.Provider value={{
                 isSignedIn: isSignedIn,

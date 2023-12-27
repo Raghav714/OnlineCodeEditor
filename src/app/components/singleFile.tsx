@@ -57,7 +57,6 @@ const SingleFile: React.FC<SingleFileProps> = ({
     }, [title]);
 
     const handleFileClick = () => {
-        console.log();
         setFileId(id)
         setCode(code)
     }

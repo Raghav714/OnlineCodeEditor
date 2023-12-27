@@ -54,8 +54,8 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                             <h3>Shift + Enter</h3>
                         </div>
                         <div className="key-mapping">
-                            <h3>Clear Console</h3>
-                            <h3>Cmd/Ctrl + Shift + D</h3>
+                            <h3>Toggle File Sidebar</h3>
+                            <h3>Cmd/Ctrl + O</h3>
                         </div>
                         <div className="key-mapping">
                             <h3>Settings</h3>
@@ -72,6 +72,10 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                         <div className="key-mapping">
                             <h3>Save File</h3>
                             <h3>Cmd/Ctrl + S</h3>
+                        </div>
+                        <div className="key-mapping">
+                            <h3>Clear Console</h3>
+                            <h3>Cmd/Ctrl + Shift + D</h3>
                         </div>
                     </div>
                 </div>

@@ -27,7 +27,6 @@ const Sidebar: React.FC = () => {
     };
 
     useEffect(() => {
-        console.log(files)
         if (!userId) {
             setCode("");
             setFileTitle("")

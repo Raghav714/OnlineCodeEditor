@@ -23,7 +23,6 @@ async function login(email: string, password: string) {
 async function requestPasswordChange(email: string) {
     try {
         let result = await pb.collection('users').requestPasswordReset(email);
-        console.log(result)
         return result
     } catch (error) {
         console.error('Error logging in:', error);
@@ -39,8 +38,6 @@ async function createUser(email: string, password: string, passwordConfirm: stri
             "passwordConfirm": passwordConfirm,
             "emailVisibility": true,
         });
-
-        console.log(email)
 
         return user;
     } catch (error) {
