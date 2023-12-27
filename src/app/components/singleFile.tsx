@@ -12,6 +12,8 @@ interface SingleFileProps {
     id: string,
     title: string,
     code: string,
+    lastUpdated: string,
+    dateCreated: string,
     handleDeleteFile: (id: string) => void
     handleRenameFile: (id: string, title: string) => void
     onClick: () => void;
@@ -22,12 +24,15 @@ const SingleFile: React.FC<SingleFileProps> = ({
     id,
     title,
     code,
+    lastUpdated,
+    dateCreated,
     handleDeleteFile,
     handleRenameFile,
     onClick
 }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
     const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false);
+    const [isMoreInfoOpen, setIsMoreInfoOpen] = useState<boolean>(false)
     const [isRenaming, setIsRenaming] = useState<boolean>(false);
     const [newFilename, setNewFilename] = useState<string>(title);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -52,6 +57,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
     }, [title]);
 
     const handleFileClick = () => {
+        console.log();
         setFileId(id)
         setCode(code)
     }
@@ -98,7 +104,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
     }
 
     const toggleMoreInfo = () => {
-
+        setIsMoreInfoOpen(true);
     }
 
     return (
@@ -146,15 +152,28 @@ const SingleFile: React.FC<SingleFileProps> = ({
                             ]}
                             position="right"
                         />
-                        {createPortal(<Modal
-                            content={<ConfirmDelete
-                                fileTitle={title}
-                                handleYesClick={handleConfirmDelete}
-                                handleNoClick={() => setIsDeleteOpen(false)}
-                            />}
-                            isOpen={isDeleteOpen}
-                            setIsOpen={setIsDeleteOpen}
-                        />, document.body
+                        {createPortal(
+                            <>
+                                <Modal
+                                    content={<ConfirmDelete
+                                        fileTitle={title}
+                                        handleYesClick={handleConfirmDelete}
+                                        handleNoClick={() => setIsDeleteOpen(false)}
+                                    />}
+                                    isOpen={isDeleteOpen}
+                                    setIsOpen={setIsDeleteOpen}
+                                />
+                                <Modal
+                                    content={<div>
+                                        <h4>Last Saved: {lastUpdated.split(":").slice(0, 2).join(":")}</h4>
+                                        <h4>Date Created: {dateCreated.split(" ")[0]}</h4>
+                                    </div>
+                                    }
+                                    isOpen={isMoreInfoOpen}
+                                    setIsOpen={setIsMoreInfoOpen}
+                                />
+                            </>
+                            , document.body
                         )}
                     </div>
                 </div>

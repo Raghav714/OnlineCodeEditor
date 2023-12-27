@@ -27,6 +27,7 @@ const Sidebar: React.FC = () => {
     };
 
     useEffect(() => {
+        console.log(files)
         if (!userId) {
             setCode("");
             setFileTitle("")
@@ -104,7 +105,10 @@ const Sidebar: React.FC = () => {
                 <h3 className='bright' style={{ borderBottom: `1px solid ${ThemeBackgroundMap[theme].gutterForeground}` }}>
                     Files
                 </h3>
-                <button onClick={addFile} className='add-file-button'>+</button>
+                <button onClick={addFile} className='add-file-button' style={{
+                    color: textColor,
+                    backgroundColor: backgroundColor
+                }}>+</button>
             </div>
             {
                 files?.map((file: any) => {
@@ -114,6 +118,8 @@ const Sidebar: React.FC = () => {
                         //Change So this uses context to get this maybe??
                         id={file.id}
                         title={file.title}
+                        lastUpdated={file.updated}
+                        dateCreated={file.created}
 
                         code={file.code}
                         onClick={() => setFileTitle(file.title)}
