@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin } from '@uiw/react-codemirror';
 import { LayoutContext, ThemeContext, AuthContext, FileContext, LanguageContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
+import { LanguageThemeMap } from "../resources/languages";
 import { ThemeMap } from "../resources/themes";
 import { saveCodeFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
@@ -174,7 +175,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         var newColor = g | (b << 8) | (r << 16);
         return '#' + newColor.toString(16);
     }
-    const FileNameHeader = <>{fileTitle} {language}</>
+
+
+    const FileNameHeader = <>
+        <p className="file-title-name">{fileTitle}</p>
+        <p className="file-title-type" style={LanguageThemeMap[language]}>{language}</p>
+    </>
 
 
 
