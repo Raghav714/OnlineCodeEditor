@@ -99,23 +99,22 @@
 
 
 .settings-modal {
-    width: 50%;
-    padding: 2em;
+    /* width: 50%; */
+    padding: 2em 5em;
     max-width: 480px;
-    height: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .settings-modal>h1 {
-    margin-bottom: 0.7em;
+    margin-bottom: 0.5em;
 }
 
 .settings-modal-inner {
     height: 100%;
     display: flex;
-    width: 75%;
+    /* width: 75%; */
     flex-direction: column;
     justify-content: space-between;
 }
@@ -123,11 +122,12 @@
 
 
 .theme-dropdown-container {
-    margin-left: 1em;
+    margin: 0em 1em 0.8em 1em;
 }
 
 
 .settings-key-mappings {
+    margin-top: 1em;
     display: flex;
     flex-direction: column;
 }
@@ -135,7 +135,7 @@
 .settings-key-mappings>h2 {
     width: 100%;
     text-align: center;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.3em;
     font-size: 22px;
     font-weight: 600;
 }

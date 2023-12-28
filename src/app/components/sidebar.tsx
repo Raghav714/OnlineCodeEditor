@@ -25,7 +25,6 @@ const Sidebar: React.FC = () => {
         if (isSignedIn) {
             let data = await getCodeFiles();
             setFiles(data);
-            console.log(data)
         }
     };
 
@@ -111,7 +110,6 @@ const Sidebar: React.FC = () => {
     }
 
     const handleClickTitle = (singleFileTitle: string, singleFileLanguage: string) => {
-        console.log(singleFileLanguage);
         setFileTitle(singleFileTitle);
         setLanguage(singleFileLanguage);
     }

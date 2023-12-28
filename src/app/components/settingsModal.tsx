@@ -51,7 +51,6 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
             <div className="settings-modal" ref={modalRef}>
                 <h1>Settings</h1>
                 <div className="settings-modal-inner">
-                    <button className="submit-button" onClick={handleToggleMinimal}>Toggle Minimal Mode</button>
                     <div className="theme-dropdown-container">
                         <label htmlFor="theme-select">Choose a theme: </label>
                         <select className="theme-dropdown" id="theme-select" value={theme} onChange={handleThemeChange}>
@@ -70,6 +69,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                             <option value="java">Java</option>
                         </select>
                     </div>
+                    <button className="submit-button" onClick={handleToggleMinimal}>Toggle Minimal Mode</button>
                     <div className="settings-key-mappings">
                         <h2>Key Mappings</h2>
                         <div className="key-mapping">
