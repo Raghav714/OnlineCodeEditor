@@ -28,17 +28,20 @@ app.post('/python', (req, res) => {
 app.post('/cpp', (req, res) => {
     const { code } = req.body;
 
+
     const tempCppFilePath = '/tmp/tempCppCode.cpp';
     fs.writeFileSync(tempCppFilePath, code);
 
     const compiledOutputPath = '/tmp/compiledCppCode';
     const compileProcess = spawnSync('g++', [tempCppFilePath, '-o', compiledOutputPath]);
 
+
     if (compileProcess.status !== 0) {
         return res.status(200).json({ output: compileProcess.stderr.toString() });
     }
 
     const executeProcess = spawnSync(compiledOutputPath);
+
 
     if (executeProcess.status === 1) {
         res.status(200).json({ output: executeProcess.stderr.toString() });
@@ -55,6 +58,7 @@ app.post('/java', (req, res) => {
 
     fs.writeFileSync(tempJavaFilePath, code);
     const compileProcess = spawnSync('javac', [tempJavaFilePath]);
+
 
     if (compileProcess.status !== 0) {
         return res.status(200).json({ output: compileProcess.stderr.toString() });

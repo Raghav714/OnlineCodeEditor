@@ -9,8 +9,8 @@
     "build": "node index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Google LLC",
+  "license": "Apache-2.0",
   "dependencies": {
     "child_process": "^1.0.2",
     "cors": "^2.8.5",
