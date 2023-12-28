@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { LayoutContext, ThemeContext, AuthContext } from "./resources/contexts";
+import { LayoutContext, ThemeContext, AuthContext, LanguageContext } from "./resources/contexts";
 import { logout } from "./resources/pocketbase";
 import { ThemeBackgroundMap, ThemeColorMap } from "./resources/themes";
 import Resizable from "./components/resizable";
@@ -9,8 +9,11 @@ import Console from './components/console';
 import SettingsModal from './components/settingsModal';
 import AccountModal from './components/accountModal';
 import InfoIcon from './assets/info-icon.png';
+import LogoutIcon from './assets/logout-icon.png'
 import AccountIcon from './assets/account-icon.png';
 import './styles/main.css';
+
+import Link from 'next/link';
 
 
 
@@ -29,6 +32,9 @@ const Home: React.FC = () => {
     const [theme, setTheme] = useState<string>("nord");
     const [backgroundColor, setBackgroundColor] = useState<string>(ThemeBackgroundMap["nord"].background);
     const [textColor, setTextColor] = useState<string>(ThemeColorMap["nord"][1][2].value.specs[2].color);
+    const [language, setLanguage] = useState<string>("python");
+    const [defaultLanguage, setDefaultLanguage] = useState<string>("python");
+
 
     useEffect(() => {
         const handleKeyUp = (e: KeyboardEvent) => {
@@ -75,9 +81,11 @@ const Home: React.FC = () => {
     const handleLogin = () => {
         setIsLoginOpen(prev => !prev);
     }
+
     const toggleIsLogoutOpen = () => {
         setIsLogoutOpen(prev => !prev);
     }
+
     const handleLogout = () => {
         setIsLogoutOpen(false);
         setIsSignedIn(false);
@@ -90,50 +98,57 @@ const Home: React.FC = () => {
         <div className="main-container"
             style={{ backgroundColor: backgroundColor }}
         >
-            <title>Online Python Editor</title>
-            <AuthContext.Provider value={{
-                isSignedIn: isSignedIn,
-                setIsSignedIn: setIsSignedIn,
-                userId: userId,
-                setUserId: setUserId,
+            <title>Online Code Editor</title>
+            <LanguageContext.Provider value={{
+                language: language,
+                setLanguage: setLanguage,
+                defaultLanguage: defaultLanguage,
+                setDefaultLanguage: setDefaultLanguage,
             }}>
-                <LayoutContext.Provider value={{
-                    isMinimal: isMinimal,
-                    setIsMinimal: setIsMinimal,
-                    isSidebarOpen: isSidebarOpen,
-                    setIsSidebarOpen: setIsSidebarOpen
-                }} >
-                    <ThemeContext.Provider value={{
-                        value: theme,
-                        setValue: setTheme,
-                        backgroundColor: backgroundColor,
-                        textColor: textColor,
+                <AuthContext.Provider value={{
+                    isSignedIn: isSignedIn,
+                    setIsSignedIn: setIsSignedIn,
+                    userId: userId,
+                    setUserId: setUserId,
+                }}>
+                    <LayoutContext.Provider value={{
+                        isMinimal: isMinimal,
+                        setIsMinimal: setIsMinimal,
+                        isSidebarOpen: isSidebarOpen,
+                        setIsSidebarOpen: setIsSidebarOpen
                     }} >
-                        <SettingsModal
-                            isOpen={isSettingsOpen}
-                            setIsOpen={setIsSettingsOpen}
-                        />
-                        <AccountModal
-                            isOpen={isLoginOpen}
-                            setIsOpen={setIsLoginOpen}
-                        />
-                        <div className={`${isMinimal ? 'hidden' : 'visible'} account-button-container`} ref={logoutRef}>
-                            <img className="account-button" onClick={isSignedIn ? toggleIsLogoutOpen : handleLogin} src={AccountIcon.src} />
-                            <button className={`${isLogoutOpen ? 'visible' : 'hidden'} logout-button`} onClick={handleLogout}>
-                                Logout
-                            </button>
-                        </div>
-                        <div className="main-inner-container">
-                            <Resizable
-                                leftPanel={<CodeEditor setOutput={setConsoleOutput} />}
-                                rightPanel={<Console output={consoleOutput} />}
-                                draggerWidth={4}
-                                draggerColor="#7E4B0E"
+                        <ThemeContext.Provider value={{
+                            value: theme,
+                            setValue: setTheme,
+                            backgroundColor: backgroundColor,
+                            textColor: textColor,
+                        }} >
+                            <SettingsModal
+                                isOpen={isSettingsOpen}
+                                setIsOpen={setIsSettingsOpen}
                             />
-                        </div>
-                    </ThemeContext.Provider>
-                </LayoutContext.Provider>
-            </AuthContext.Provider>
+                            <AccountModal
+                                isOpen={isLoginOpen}
+                                setIsOpen={setIsLoginOpen}
+                            />
+                            <div className={`${isMinimal ? 'hidden' : 'visible'} account-button-container`} ref={logoutRef}>
+                                <img className="account-button" onClick={isSignedIn ? toggleIsLogoutOpen : handleLogin} src={isSignedIn ? LogoutIcon.src : AccountIcon.src} />
+                                <button className={`${isLogoutOpen ? 'visible' : 'hidden'} logout-button`} onClick={handleLogout}>
+                                    Logout
+                                </button>
+                            </div>
+                            <div className="main-inner-container">
+                                <Resizable
+                                    leftPanel={<CodeEditor setOutput={setConsoleOutput} />}
+                                    rightPanel={<Console output={consoleOutput} />}
+                                    draggerWidth={4}
+                                    draggerColor="#7E4B0E"
+                                />
+                            </div>
+                        </ThemeContext.Provider>
+                    </LayoutContext.Provider>
+                </AuthContext.Provider>
+            </LanguageContext.Provider>
 
             <div className={`${isMinimal ? 'hidden' : 'visible'} info-icon-container`}>
                 <img className="info-icon" src={InfoIcon.src} alt="ESC Button" />
@@ -141,7 +156,7 @@ const Home: React.FC = () => {
                     Press 'esc' for more info
                 </div>
             </div>
-
+            {/* <Link href='/test' style={{ color: 'black' }}>Test</Link> */}
         </div>
     )
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { FileContext, ThemeContext } from "../resources/contexts";
 import { createPortal } from "react-dom";
-import { deletePythonFile, renamePythonFile } from "../resources/pocketbase";
+import { deleteCodeFile, renameCodeFile } from "../resources/pocketbase";
 import OptionsIcon from '../assets/options-icon.png';
 import Dropdown from "./dropdown";
 import Modal from "./modal";
@@ -81,7 +81,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
     }
 
     const handleConfirmDelete = () => {
-        deletePythonFile(id);
+        deleteCodeFile(id);
         setIsDeleteOpen(false);
         handleDeleteFile(id);
     }
@@ -96,7 +96,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
             setNewFilename(title);
             setIsRenaming(false);
         } else {
-            await renamePythonFile(id, newFilename);
+            await renameCodeFile(id, newFilename);
             handleRenameFile(id, newFilename);
         }
         setIsRenaming(false);
@@ -164,8 +164,8 @@ const SingleFile: React.FC<SingleFileProps> = ({
                                 />
                                 <Modal
                                     content={<div>
-                                        <h4>Last Saved: {lastUpdated.split(":").slice(0, 2).join(":")}</h4>
-                                        <h4>Date Created: {dateCreated.split(" ")[0]}</h4>
+                                        <h4>Last Saved: {lastUpdated?.split(":").slice(0, 2).join(":")}</h4>
+                                        <h4>Date Created: {dateCreated?.split(" ")[0]}</h4>
                                     </div>
                                     }
                                     isOpen={isMoreInfoOpen}

@@ -1,7 +1,8 @@
 import React, { useEffect, useContext, useState, useRef } from 'react';
-import { AuthContext, LayoutContext, FileContext, ThemeContext } from '../resources/contexts';
+import { AuthContext, LayoutContext, FileContext, ThemeContext, LanguageContext } from '../resources/contexts';
 import { ThemeBackgroundMap } from '../resources/themes';
-import { addPythonFile, getPythonFiles } from '../resources/pocketbase';
+import { addCodeFile, getCodeFiles } from '../resources/pocketbase';
+import { LanguageMap } from '../resources/languages';
 import '../styles/codeEditor.css';
 import SingleFile from './singleFile';
 
@@ -13,6 +14,7 @@ const Sidebar: React.FC = () => {
     const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
     const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext)
     const { isSidebarOpen: isSidebarOpen } = useContext(LayoutContext);
+    const { language: language, setLanguage: setLanguage, defaultLanguage: defaultLanguage } = useContext(LanguageContext);
     const {
         fileId: fileId,
         setFileId: setFileId,
@@ -21,8 +23,9 @@ const Sidebar: React.FC = () => {
 
     const fetchData = async () => {
         if (isSignedIn) {
-            let data = await getPythonFiles(userId);
+            let data = await getCodeFiles(userId);
             setFiles(data);
+            console.log(data)
         }
     };
 
@@ -45,19 +48,34 @@ const Sidebar: React.FC = () => {
             }
         }
 
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
 
+
     const addFile = async () => {
         setShowInput(true)
     }
 
+
     const handleSubmitFile = async (e: React.KeyboardEvent) => {
         if (e.key === 'Enter') {
-            const newFile = await addPythonFile(userId, title);
+            const parts = title.split(".");
+            const filetype = parts.pop();
+            let newTitle = title;
+            let newFile;
+            if (filetype && filetype in LanguageMap) {
+                newTitle = parts.join(".");
+                setLanguage(LanguageMap[filetype])
+                newFile = await addCodeFile(userId, newTitle, LanguageMap[filetype]);
+            } else {
+                setLanguage(defaultLanguage);
+                newFile = await addCodeFile(userId, newTitle, defaultLanguage);
+            }
+
             if (!newFile)
                 console.error("Error creating new file")
             else {
@@ -92,6 +110,12 @@ const Sidebar: React.FC = () => {
         setFiles(updatedFiles);
     }
 
+    const handleClickTitle = (singleFileTitle: string, singleFileLanguage: string) => {
+        console.log(singleFileLanguage);
+        setFileTitle(singleFileTitle);
+        setLanguage(singleFileLanguage);
+    }
+
 
     return (
         <div className={`${!isSidebarOpen ? 'hidden' : 'visible'} sidemirror-container dull`}
@@ -121,7 +145,7 @@ const Sidebar: React.FC = () => {
                         dateCreated={file.created}
 
                         code={file.code}
-                        onClick={() => setFileTitle(file.title)}
+                        onClick={() => handleClickTitle(file.title, file.language)}
                         handleDeleteFile={handleDeleteFile}
                         handleRenameFile={handleRenameFile}
                     />

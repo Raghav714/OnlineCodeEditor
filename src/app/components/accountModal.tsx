@@ -18,8 +18,8 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     } = useContext(AuthContext);
     const modalRef = useRef<HTMLDivElement>(null);
 
-    const [email, setEmail] = useState<string>("");
-    const [password, setPassword] = useState<string>("");
+    const [email, setEmail] = useState<string>("test@gmail.com");
+    const [password, setPassword] = useState<string>("test123");
     const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [displayLogin, setDisplayLogin] = useState<boolean>(true);
     const [isLoginErrorDisplayed, setIsLoginErrorDisplayed] = useState<boolean>(false)
@@ -31,7 +31,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
                 setDisplayLogin(true);
-                resetState();
+                // resetState();
             }
         };
 
@@ -61,7 +61,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     }
 
     const handleToggleLoginCreate = () => {
-        resetState();
+        // resetState();
         setDisplayLogin(prev => !prev)
     }
 
@@ -72,7 +72,6 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
         setIsLoginErrorDisplayed(false);
         setIsCreateAccountError(false);
     }
-
 
     return (
         <div className={`account-container ${isOpen ? `visible` : `hidden`}`}>
@@ -100,7 +99,6 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
                     isErrorDisplayed={isCreateAccountError}
                     setIsErrorDisplayed={setIsCreateAccountError}
                 />
-
             </div>
         </div >
     )

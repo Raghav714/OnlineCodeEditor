@@ -62,3 +62,17 @@ export const FileContext = createContext<FileContextType>({
     setCode: () => { }
 })
 
+
+interface LanguageContextType {
+    language: string,
+    setLanguage: (lang: string) => void
+    defaultLanguage: string,
+    setDefaultLanguage: (lang: string) => void
+}
+export const LanguageContext = createContext<LanguageContextType>({
+    language: "",
+    setLanguage: () => { },
+    defaultLanguage: "",
+    setDefaultLanguage: () => { },
+})
+

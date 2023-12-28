@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin } from '@uiw/react-codemirror';
-import { LayoutContext, ThemeContext, AuthContext, FileContext } from "../resources/contexts";
+import { LayoutContext, ThemeContext, AuthContext, FileContext, LanguageContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
 import { ThemeMap } from "../resources/themes";
-import { savePythonFile } from "../resources/pocketbase";
+import { saveCodeFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
 import Resizable from "./resizable";
 import "../styles/codeEditor.css"
@@ -68,6 +68,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     } = useContext(LayoutContext);
     const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
     const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
+    const { language: language } = useContext(LanguageContext);
 
     useEffect(() => {
         const createBackendConnection = async () => {
@@ -113,7 +114,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     }, [fileId])
 
     const handleSaveFile = async () => {
-        await savePythonFile(fileId, code);
+        await saveCodeFile(fileId, code);
     }
 
     useEffect(() => {
@@ -125,7 +126,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         }
         window.addEventListener('keydown', handleKeyDown);
         return () => { window.removeEventListener('keydown', handleKeyDown) }
-    }, [fileId, code, savePythonFile])
+    }, [fileId, code, saveCodeFile])
 
 
 
@@ -139,7 +140,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                 },
                 body: JSON.stringify({ code: code })
             }
-            let response = await fetch(`${NEXT_PUBLIC_API_URL}`, requestOptions);
+            let response = await fetch(`${NEXT_PUBLIC_API_URL}/${language}`, requestOptions);
             let data = await response.json()
             if (data && data.output) {
                 setOutput(data.output);
@@ -173,6 +174,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         var newColor = g | (b << 8) | (r << 16);
         return '#' + newColor.toString(16);
     }
+    const FileNameHeader = <>{fileTitle} {language}</>
 
 
 
@@ -194,7 +196,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                     setCode: setCode,
                     setFileTitle: setFileTitle,
                 }}
-
                 >
                     <Resizable
                         leftPanel={<Sidebar />}
@@ -205,7 +206,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         backgroundColor: backgroundColor,
                                         color: darkenHexColor(backgroundColor, 70),
                                     }}>
-                                    {(isSignedIn && fileTitle != "") && (showSavedDisplay ? fileTitle : 'Saving...')}
+                                    {(isSignedIn && fileTitle != "") && (showSavedDisplay ? FileNameHeader : 'Saving...')}
                                 </div>
                                 <CodeMirror
                                     className="editor"
@@ -242,5 +243,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         </div>
     )
 }
+
 
 export default CodeEditor;

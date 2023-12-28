@@ -55,7 +55,7 @@ async function logout() {
 }
 
 
-async function savePythonFile(fileId: string, pyCode: string) {
+async function saveCodeFile(fileId: string, pyCode: string) {
     if (!pb.authStore.isValid)
         return null;
 
@@ -66,27 +66,35 @@ async function savePythonFile(fileId: string, pyCode: string) {
 
 }
 
-async function getPythonFiles(userId: string) {
+async function getCodeFiles(userId: string) {
     if (!pb.authStore.isValid)
         return null;
 
     try {
         const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'`, requestKey: null });
         return data?.items as any[];
+        // const userRecord = await pb.collection('users').getOne(userId);
+        // const fileIds = userRecord.field || [];
+        // const filePromises = fileIds.map(async (fileId: string) => {
+        //     return await pb.collection('python_files').getOne(fileId);
+        // });
+        // const files = await Promise.all(filePromises);
+        // console.log(files);
+        // return files;
     } catch (error) {
         console.error('Error fetching Python files:', error);
         return null;
     }
 }
 
-async function addPythonFile(userId: string, title: string) {
+async function addCodeFile(userId: string, title: string, language: string) {
     if (!pb.authStore.isValid)
         return null;
-
     try {
         const record = await pb.collection('python_files').create({
             title: title,
             user: userId,
+            language: language,
         });
         return record;
     } catch (error) {
@@ -95,7 +103,7 @@ async function addPythonFile(userId: string, title: string) {
     }
 }
 
-async function deletePythonFile(fileId: string) {
+async function deleteCodeFile(fileId: string) {
     if (!pb.authStore.isValid) {
         return null;
     }
@@ -110,7 +118,7 @@ async function deletePythonFile(fileId: string) {
 
 }
 
-async function renamePythonFile(fileId: string, newTitle: string) {
+async function renameCodeFile(fileId: string, newTitle: string) {
     if (!pb.authStore.isValid) {
         return null;
     }
@@ -131,9 +139,9 @@ export {
     requestPasswordChange,
     createUser,
     logout,
-    getPythonFiles,
-    savePythonFile,
-    addPythonFile,
-    deletePythonFile,
-    renamePythonFile
+    getCodeFiles,
+    saveCodeFile,
+    addCodeFile,
+    deleteCodeFile,
+    renameCodeFile
 };
