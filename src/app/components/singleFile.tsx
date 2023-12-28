@@ -15,7 +15,7 @@ interface SingleFileProps {
     id: string,
     title: string,
     code: string,
-    language,
+    language: string,
     lastUpdated: string,
     dateCreated: string,
     handleDeleteFile: (id: string) => void
