@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useContext } from "react";
-import { LayoutContext, ThemeContext } from "../resources/contexts";
+import { AuthContext, LayoutContext, ThemeContext, LanguageContext } from "../resources/contexts";
+import { Languages } from "../resources/languages"
 import '../styles/SettingsLogin.css';
 
 interface SettingsProps {
@@ -8,6 +9,11 @@ interface SettingsProps {
 }
 
 const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
+    const { isSignedIn: isSignedIn } = useContext(AuthContext)
+    const { defaultLanguage: defaultLanguage,
+        setDefaultLanguage: setDefaultLanguage,
+        setLanguage: setLanguage
+    } = useContext(LanguageContext)
     const { isMinimal: isMinimal, setIsMinimal: setIsMinimal } = useContext(LayoutContext);
     const { value: theme, setValue: setTheme } = useContext(ThemeContext);
     const modalRef = useRef<HTMLDivElement>(null);
@@ -31,6 +37,15 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
         setTheme(e.target.value);
     };
 
+    const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (Languages.includes(e.target.value)) {
+            setDefaultLanguage(e.target.value);
+            if (!isSignedIn) {
+                setLanguage(e.target.value);
+            }
+        }
+    }
+
     return (
         <div className={`settings-container ${isOpen ? `visible` : `hidden`}`}>
             <div className="settings-modal" ref={modalRef}>
@@ -45,6 +60,14 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                             <option value="tokyoNightStorm">Tokyo Night Storm</option>
                             <option value="sublime">Sublime</option>
                             <option value="quietlight">Quietlight</option>
+                        </select>
+                    </div>
+                    <div className="theme-dropdown-container">
+                        <label htmlFor="language-select">Switch {isSignedIn && 'Default'} Language: </label>
+                        <select className="theme-dropdown" id="language-select" value={defaultLanguage} onChange={handleLanguageChange}>
+                            <option value="python">Python</option>
+                            <option value="cpp">C++</option>
+                            <option value="java">Java</option>
                         </select>
                     </div>
                     <div className="settings-key-mappings">

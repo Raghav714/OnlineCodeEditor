@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
     const [files, setFiles] = useState<any>([]);
     const [title, setTitle] = useState<string>("");
     const [showInput, setShowInput] = useState<boolean>(false);
-    const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
+    const { isSignedIn: isSignedIn } = useContext(AuthContext);
     const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext)
     const { isSidebarOpen: isSidebarOpen } = useContext(LayoutContext);
     const { language: language, setLanguage: setLanguage, defaultLanguage: defaultLanguage } = useContext(LanguageContext);
@@ -23,21 +23,21 @@ const Sidebar: React.FC = () => {
 
     const fetchData = async () => {
         if (isSignedIn) {
-            let data = await getCodeFiles(userId);
+            let data = await getCodeFiles();
             setFiles(data);
             console.log(data)
         }
     };
 
     useEffect(() => {
-        if (!userId) {
+        if (!isSignedIn) {
             setCode("");
             setFileTitle("")
             setFiles([])
         } else {
             fetchData();
         }
-    }, [userId, fileId]);
+    }, [isSignedIn, fileId]);
 
 
     useEffect(() => {
@@ -70,10 +70,10 @@ const Sidebar: React.FC = () => {
             if (filetype && filetype in LanguageMap) {
                 newTitle = parts.join(".");
                 setLanguage(LanguageMap[filetype])
-                newFile = await addCodeFile(userId, newTitle, LanguageMap[filetype]);
+                newFile = await addCodeFile(newTitle, LanguageMap[filetype]);
             } else {
                 setLanguage(defaultLanguage);
-                newFile = await addCodeFile(userId, newTitle, defaultLanguage);
+                newFile = await addCodeFile(newTitle, defaultLanguage);
             }
 
             if (!newFile)

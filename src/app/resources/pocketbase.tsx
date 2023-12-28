@@ -4,14 +4,16 @@ const pb = new PocketBase(`${NEXT_PUBLIC_POCKETBASE_URL}`);
 
 async function login(email: string, password: string) {
     try {
-        await pb.collection('users').authWithPassword(email, password);
+        const user = await pb.collection('users').authWithPassword(email, password);
 
         if (!pb.authStore.isValid)
             return null;
 
+
         return {
             isValid: true,
             userId: pb.authStore.model?.id,
+            defaultLanguage: user.record?.defaultLanguage
         }
 
     } catch (error) {
@@ -46,6 +48,19 @@ async function createUser(email: string, password: string, passwordConfirm: stri
     }
 }
 
+async function changeDefaultLanguage(defaultLanguage: string) {
+    if (!pb.authStore.isValid || !pb.authStore.model)
+        return null;
+
+    try {
+        await pb.collection('users').update(pb.authStore.model?.id, {
+            defaultLanguage: defaultLanguage
+        })
+    } catch (error) {
+        console.error("Error updating default language ", error)
+    }
+}
+
 async function logout() {
     try {
         pb.authStore.clear();
@@ -66,12 +81,12 @@ async function saveCodeFile(fileId: string, pyCode: string) {
 
 }
 
-async function getCodeFiles(userId: string) {
-    if (!pb.authStore.isValid)
+async function getCodeFiles() {
+    if (!pb.authStore.isValid || !pb.authStore.model)
         return null;
 
     try {
-        const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${userId}'`, requestKey: null });
+        const data = await pb.collection('python_files').getList(1, 50, { filter: `user = '${pb.authStore.model.id}'`, requestKey: null });
         return data?.items as any[];
         // const userRecord = await pb.collection('users').getOne(userId);
         // const fileIds = userRecord.field || [];
@@ -87,13 +102,13 @@ async function getCodeFiles(userId: string) {
     }
 }
 
-async function addCodeFile(userId: string, title: string, language: string) {
-    if (!pb.authStore.isValid)
+async function addCodeFile(title: string, language: string) {
+    if (!pb.authStore.isValid || !pb.authStore.model)
         return null;
     try {
         const record = await pb.collection('python_files').create({
             title: title,
-            user: userId,
+            user: pb.authStore.model.id,
             language: language,
         });
         return record;
@@ -137,6 +152,7 @@ export {
     login,
     // authLogin,
     requestPasswordChange,
+    changeDefaultLanguage,
     createUser,
     logout,
     getCodeFiles,

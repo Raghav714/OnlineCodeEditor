@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { LayoutContext, ThemeContext, AuthContext, LanguageContext } from "./resources/contexts";
-import { logout } from "./resources/pocketbase";
+import { logout, changeDefaultLanguage } from "./resources/pocketbase";
 import { ThemeBackgroundMap, ThemeColorMap } from "./resources/themes";
 import Resizable from "./components/resizable";
 import CodeEditor from "./components/codeEditor";
@@ -9,13 +9,10 @@ import Console from './components/console';
 import SettingsModal from './components/settingsModal';
 import AccountModal from './components/accountModal';
 import InfoIcon from './assets/info-icon.png';
-import LogoutIcon from './assets/logout-icon.png'
+import LogoutIcon from './assets/logout-icon.png';
+import SettingsIcon from './assets/settings-icon.png';
 import AccountIcon from './assets/account-icon.png';
 import './styles/main.css';
-
-import Link from 'next/link';
-
-
 
 const Home: React.FC = () => {
     const [consoleOutput, setConsoleOutput] = useState<string>("");
@@ -26,7 +23,6 @@ const Home: React.FC = () => {
 
     //Context states
     const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
-    const [userId, setUserId] = useState<string>("");
     const [isMinimal, setIsMinimal] = useState<boolean>(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
     const [theme, setTheme] = useState<string>("nord");
@@ -35,12 +31,15 @@ const Home: React.FC = () => {
     const [language, setLanguage] = useState<string>("python");
     const [defaultLanguage, setDefaultLanguage] = useState<string>("python");
 
+    const handleOpenSettings = () => {
+        setIsSettingsOpen(prevVal => !prevVal);
+        setIsLogoutOpen(false);
+    }
 
     useEffect(() => {
         const handleKeyUp = (e: KeyboardEvent) => {
             if (e.key == 'Escape') {
-                setIsSettingsOpen(prevVal => !prevVal);
-                setIsLogoutOpen(false);
+                handleOpenSettings();
             }
             if (e.key === 'm' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
@@ -77,6 +76,11 @@ const Home: React.FC = () => {
         setTextColor(ThemeColorMap[theme][1][2].value.specs[2].color);
     }, [theme])
 
+    useEffect(() => {
+        if (isSignedIn) {
+            changeDefaultLanguage(defaultLanguage);
+        }
+    }, [defaultLanguage])
 
     const handleLogin = () => {
         setIsLoginOpen(prev => !prev);
@@ -89,8 +93,8 @@ const Home: React.FC = () => {
     const handleLogout = () => {
         setIsLogoutOpen(false);
         setIsSignedIn(false);
-        setUserId("");
         setConsoleOutput("");
+        setDefaultLanguage("python");
         logout();
     }
 
@@ -108,8 +112,6 @@ const Home: React.FC = () => {
                 <AuthContext.Provider value={{
                     isSignedIn: isSignedIn,
                     setIsSignedIn: setIsSignedIn,
-                    userId: userId,
-                    setUserId: setUserId,
                 }}>
                     <LayoutContext.Provider value={{
                         isMinimal: isMinimal,
@@ -132,6 +134,7 @@ const Home: React.FC = () => {
                                 setIsOpen={setIsLoginOpen}
                             />
                             <div className={`${isMinimal ? 'hidden' : 'visible'} account-button-container`} ref={logoutRef}>
+                                <img className="account-button" onClick={handleOpenSettings} src={SettingsIcon.src} />
                                 <img className="account-button" onClick={isSignedIn ? toggleIsLogoutOpen : handleLogin} src={isSignedIn ? LogoutIcon.src : AccountIcon.src} />
                                 <button className={`${isLogoutOpen ? 'visible' : 'hidden'} logout-button`} onClick={handleLogout}>
                                     Logout
@@ -156,7 +159,6 @@ const Home: React.FC = () => {
                     Press 'esc' for more info
                 </div>
             </div>
-            {/* <Link href='/test' style={{ color: 'black' }}>Test</Link> */}
         </div>
     )
 }

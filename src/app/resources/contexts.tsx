@@ -33,17 +33,11 @@ export const ThemeContext = createContext<ThemeContextType>({
 interface AuthContextType {
     isSignedIn: boolean,
     setIsSignedIn: (value: boolean) => void;
-
-    userId: string
-    setUserId: (value: string) => void
 }
 
 export const AuthContext = createContext<AuthContextType>({
     isSignedIn: false,
     setIsSignedIn: () => { },
-
-    userId: "",
-    setUserId: () => { }
 })
 
 interface FileContextType {

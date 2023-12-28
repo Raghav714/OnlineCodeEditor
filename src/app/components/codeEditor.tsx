@@ -68,7 +68,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         setIsSidebarOpen: setIsSidebarOpen
     } = useContext(LayoutContext);
     const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
-    const { isSignedIn: isSignedIn, userId: userId } = useContext(AuthContext);
+    const { isSignedIn: isSignedIn } = useContext(AuthContext);
     const { language: language } = useContext(LanguageContext);
 
     useEffect(() => {
@@ -177,8 +177,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     }
 
     const FileNameHeader = <>
-        <p className="file-title-name">{fileTitle}</p>
-        <p className="file-title-type" style={LanguageThemeMap[language]}>{language}</p>
+
     </>
 
 
@@ -211,7 +210,13 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         backgroundColor: backgroundColor,
                                         color: darkenHexColor(backgroundColor, 70),
                                     }}>
-                                    {(isSignedIn && fileTitle != "") && (showSavedDisplay ? FileNameHeader : 'Saving...')}
+                                    <p className="file-title-type" style={LanguageThemeMap[language]}>{language}</p>
+                                    {
+                                        (isSignedIn && fileTitle != "") &&
+                                        <p className="file-title-name">
+                                            {showSavedDisplay ? fileTitle : 'Saving...'}
+                                        </p>
+                                    }
                                 </div>
                                 <CodeMirror
                                     className="editor"

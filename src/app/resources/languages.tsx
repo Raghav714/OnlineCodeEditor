@@ -1,4 +1,4 @@
-
+const Languages: string[] = ['python', 'java', 'cpp']
 
 const LanguageMap: { [key: string]: string } = {
     'py': 'python',
@@ -6,11 +6,11 @@ const LanguageMap: { [key: string]: string } = {
     'java': 'java'
 }
 
+
 type Theme = {
     color: string;
     border: string;
 };
-
 const LanguageThemeMap: { [key: string]: Theme } = {
     'python': {
         color: '#668966',
@@ -27,4 +27,4 @@ const LanguageThemeMap: { [key: string]: Theme } = {
 }
 
 
-export { LanguageMap, LanguageThemeMap }
+export { Languages, LanguageMap, LanguageThemeMap }

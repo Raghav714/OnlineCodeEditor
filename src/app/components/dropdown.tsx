@@ -4,7 +4,7 @@ import '../styles/dropdown.css';
 /**
  * Creates a Dropdown menu
  * @important Container where this component is created must have 
- * an absolute position
+ * an absolute or fixed position
  */
 interface ActionItem {
     tag: string;

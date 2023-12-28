@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
-import { AuthContext } from "../resources/contexts";
+import { AuthContext, LanguageContext } from "../resources/contexts";
 import { login, createUser } from "../resources/pocketbase";
 import LoginForm from "./loginForm";
 import CreateAccountForm from "./createAccountForm";
@@ -11,15 +11,12 @@ interface LoginProps {
 }
 
 const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
-    const {
-        isSignedIn: isSignedIn,
-        setIsSignedIn: setIsSignedIn,
-        setUserId: setUserId
-    } = useContext(AuthContext);
+    const { isSignedIn: isSignedIn, setIsSignedIn: setIsSignedIn } = useContext(AuthContext);
     const modalRef = useRef<HTMLDivElement>(null);
+    const { setLanguage: setLanguage, setDefaultLanguage: setDefaultLanguage } = useContext(LanguageContext);
 
-    const [email, setEmail] = useState<string>("test@gmail.com");
-    const [password, setPassword] = useState<string>("test123");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [passwordConfirm, setPasswordConfirm] = useState<string>("");
     const [displayLogin, setDisplayLogin] = useState<boolean>(true);
     const [isLoginErrorDisplayed, setIsLoginErrorDisplayed] = useState<boolean>(false)
@@ -31,20 +28,21 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
                 setDisplayLogin(true);
-                // resetState();
+                resetState();
             }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => { document.removeEventListener('mousedown', handleClickOutside); };
-    })
+    }, [setIsOpen, modalRef])
 
     const handleSubmit = async () => {
         const files = await login(email, password);
         if (files) {
+            setDefaultLanguage(files.defaultLanguage);
+            setLanguage(files.defaultLanguage)
             setIsSignedIn(true);
             setIsLoginErrorDisplayed(false);
-            setUserId(files.userId);
             setIsOpen(false);
         } else {
             setIsLoginErrorDisplayed(true)
@@ -61,7 +59,7 @@ const AccountModal: React.FC<LoginProps> = ({ isOpen, setIsOpen }) => {
     }
 
     const handleToggleLoginCreate = () => {
-        // resetState();
+        resetState();
         setDisplayLogin(prev => !prev)
     }
 
