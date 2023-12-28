@@ -143,6 +143,7 @@ const Sidebar: React.FC = () => {
                         title={file.title}
                         lastUpdated={file.updated}
                         dateCreated={file.created}
+                        language={file.language}
 
                         code={file.code}
                         onClick={() => handleClickTitle(file.title, file.language)}

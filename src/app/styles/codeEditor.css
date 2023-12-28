@@ -148,7 +148,20 @@
     align-items: center;
     position: relative;
     white-space: nowrap;
-    padding: 0.3em 0em 0.3em 0.6em;
+    padding: 0.3em 0em 0.3em 0.5em;
+}
+
+.language-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 1em;
+    width: 1em;
+    margin-right: 0.5em;
+}
+
+.language-icon {
+    height: 100%;
 }
 
 .single-file-container>h4 {

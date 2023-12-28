@@ -176,7 +176,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         return '#' + newColor.toString(16);
     }
 
-
     const FileNameHeader = <>
         <p className="file-title-name">{fileTitle}</p>
         <p className="file-title-type" style={LanguageThemeMap[language]}>{language}</p>

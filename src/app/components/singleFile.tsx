@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { FileContext, ThemeContext } from "../resources/contexts";
+import { FileContext, ThemeContext, LanguageContext } from "../resources/contexts";
 import { createPortal } from "react-dom";
 import { deleteCodeFile, renameCodeFile } from "../resources/pocketbase";
+import PythonIcon from "../assets/python-icon.png";
+import CppIcon from "../assets/cpp-icon.png";
+import JavaIcon from "../assets/java-icon.png";
 import OptionsIcon from '../assets/options-icon.png';
 import Dropdown from "./dropdown";
 import Modal from "./modal";
@@ -12,6 +15,7 @@ interface SingleFileProps {
     id: string,
     title: string,
     code: string,
+    language,
     lastUpdated: string,
     dateCreated: string,
     handleDeleteFile: (id: string) => void
@@ -24,6 +28,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
     id,
     title,
     code,
+    language,
     lastUpdated,
     dateCreated,
     handleDeleteFile,
@@ -40,6 +45,7 @@ const SingleFile: React.FC<SingleFileProps> = ({
 
     const { setCode: setCode, setFileId } = useContext(FileContext);
     const { backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
+    // const { language: language } = useContext(LanguageContext);
 
 
     useEffect(() => {
@@ -55,6 +61,20 @@ const SingleFile: React.FC<SingleFileProps> = ({
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [title]);
+
+    const langToIconMap = () => {
+        switch (language) {
+            case "python":
+                return PythonIcon
+            case "java":
+                return JavaIcon;
+            case "cpp":
+                return CppIcon;
+            default:
+                //TODO CHANGE WHEN DEFAULT IMPLEMENTED 
+                return PythonIcon
+        }
+    }
 
     const handleFileClick = () => {
         setFileId(id)
@@ -130,6 +150,9 @@ const SingleFile: React.FC<SingleFileProps> = ({
                     }}
                     onMouseLeave={handleMouseLeave}
                 >
+                    <div className="language-icon-container">
+                        <img className="language-icon" src={langToIconMap().src} />
+                    </div>
                     <h4 className="">{title}</h4>
                     <div
                         className="sidebar-options-container"

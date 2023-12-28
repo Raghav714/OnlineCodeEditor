@@ -1,3 +1,5 @@
+
+
 const LanguageMap: { [key: string]: string } = {
     'py': 'python',
     'cpp': 'cpp',
@@ -23,5 +25,6 @@ const LanguageThemeMap: { [key: string]: Theme } = {
         border: '1px solid #8493c9'
     },
 }
+
 
 export { LanguageMap, LanguageThemeMap }
