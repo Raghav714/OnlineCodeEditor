@@ -26,5 +26,11 @@ const LanguageThemeMap: { [key: string]: Theme } = {
     },
 }
 
+const LanguageDefaultCode: { [key: string]: string } = {
+    'java': '\nclass Main {\n\tpublic static void main(String[] args){\n\t\tSystem.out.println(\"Hello World\");\n\t}\n}\n',
+    'cpp': '#include <iostream>\n\nint main() {\n\tstd:: cout << "HelloWorld" << std:: endl;\n\treturn 0;\n}\n',
+    'python': ''
+}
 
-export { Languages, LanguageMap, LanguageThemeMap }
+
+export { Languages, LanguageMap, LanguageThemeMap, LanguageDefaultCode }

@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState, useRef } from 'react';
 import { AuthContext, LayoutContext, FileContext, ThemeContext, LanguageContext } from '../resources/contexts';
 import { ThemeBackgroundMap } from '../resources/themes';
 import { addCodeFile, getCodeFiles } from '../resources/pocketbase';
-import { LanguageMap } from '../resources/languages';
+import { LanguageMap, LanguageDefaultCode } from '../resources/languages';
 import '../styles/codeEditor.css';
 import SingleFile from './singleFile';
 
@@ -70,18 +70,19 @@ const Sidebar: React.FC = () => {
                 newTitle = parts.join(".");
                 setLanguage(LanguageMap[filetype])
                 newFile = await addCodeFile(newTitle, LanguageMap[filetype]);
+                setCode(LanguageDefaultCode[LanguageMap[filetype]])
             } else {
                 setLanguage(defaultLanguage);
                 newFile = await addCodeFile(newTitle, defaultLanguage);
+                setCode(LanguageDefaultCode[defaultLanguage]);
             }
 
             if (!newFile)
-                console.error("Error creating new file")
+                console.error("Error creating new file");
             else {
                 setFiles([...files, newFile]);
                 setFileId(newFile.id);
                 setFileTitle(newFile.title);
-                setCode("");
                 setTitle("");
                 setShowInput(false);
             }
