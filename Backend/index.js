@@ -53,8 +53,9 @@ app.post('/cpp', (req, res) => {
 // Endpoint for Java code execution
 app.post('/java', (req, res) => {
     const { code } = req.body;
+
     const tempJavaFilePath = '/tmp/TempJavaCode.java';
-    const className = 'TempJavaCode'; // Java class name
+    const className = 'Main'; // Java class name
 
     fs.writeFileSync(tempJavaFilePath, code);
     const compileProcess = spawnSync('javac', [tempJavaFilePath]);
@@ -65,6 +66,8 @@ app.post('/java', (req, res) => {
     }
 
     const executeProcess = spawnSync('java', ['-cp', '/tmp', className]);
+
+    fs.writeFileSync(tempJavaFilePath, "");
     if (executeProcess.status === 1) {
         res.status(200).json({ output: executeProcess.stderr.toString() });
     } else {
