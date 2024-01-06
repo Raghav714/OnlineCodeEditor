@@ -12,6 +12,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
     const { isSignedIn: isSignedIn } = useContext(AuthContext)
     const { defaultLanguage: defaultLanguage,
         setDefaultLanguage: setDefaultLanguage,
+        language: language,
         setLanguage: setLanguage
     } = useContext(LanguageContext)
     const { isMinimal: isMinimal, setIsMinimal: setIsMinimal } = useContext(LayoutContext);
@@ -63,7 +64,7 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                     </div>
                     <div className="theme-dropdown-container">
                         <label htmlFor="language-select">Switch {isSignedIn && 'Default'} Language: </label>
-                        <select className="theme-dropdown" id="language-select" value={defaultLanguage} onChange={handleLanguageChange}>
+                        <select className="theme-dropdown" id="language-select" value={isSignedIn ? defaultLanguage : language} onChange={handleLanguageChange}>
                             <option value="python">Python</option>
                             <option value="cpp">C++</option>
                             <option value="java">Java</option>

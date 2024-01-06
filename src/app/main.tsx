@@ -36,6 +36,7 @@ const Home: React.FC = () => {
         setIsLogoutOpen(false);
     }
 
+
     useEffect(() => {
         const handleKeyUp = (e: KeyboardEvent) => {
             if (e.key == 'Escape') {
@@ -81,6 +82,7 @@ const Home: React.FC = () => {
             changeDefaultLanguage(defaultLanguage);
         }
     }, [defaultLanguage])
+
 
     const handleLogin = () => {
         setIsLoginOpen(prev => !prev);

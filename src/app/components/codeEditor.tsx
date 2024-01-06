@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin } from '@uiw/react-codemirror';
 import { LayoutContext, ThemeContext, AuthContext, FileContext, LanguageContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
-import { LanguageThemeMap } from "../resources/languages";
+import { LanguageThemeMap, LanguageDefaultCode } from "../resources/languages";
 import { ThemeMap } from "../resources/themes";
 import { saveCodeFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
@@ -128,6 +128,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         window.addEventListener('keydown', handleKeyDown);
         return () => { window.removeEventListener('keydown', handleKeyDown) }
     }, [fileId, code, saveCodeFile])
+
+    useEffect(() => {
+        if (!isSignedIn && (code == "" || Object.values(LanguageDefaultCode).includes(code))) {
+            setCode(LanguageDefaultCode[language]);
+        }
+    }, [language])
 
 
 
