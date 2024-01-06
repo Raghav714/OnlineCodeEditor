@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin } from '@uiw/react-codemirror';
+import { Menu, Button, Text, rem } from '@mantine/core';
 import { LayoutContext, ThemeContext, AuthContext, FileContext, LanguageContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
-import { LanguageThemeMap, LanguageDefaultCode } from "../resources/languages";
+import { LanguageThemeMap, LanguageDefaultCode, Languages } from "../resources/languages";
 import { ThemeMap } from "../resources/themes";
 import { saveCodeFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
 import Resizable from "./resizable";
+import Dropdown from "./dropdown";
 import "../styles/codeEditor.css"
 
 
@@ -59,6 +61,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [fileTitle, setFileTitle] = useState<string>("");
     const [showSavedDisplay, setShowSavedDisplay] = useState<boolean>(false);
     const saveTimer = useRef<NodeJS.Timeout | null>(null);
+    const [showLanguageDropdown, setShowLanguageDropdown] = useState<boolean>(false);
 
 
     //Contexts 
@@ -69,7 +72,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     } = useContext(LayoutContext);
     const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
     const { isSignedIn: isSignedIn } = useContext(AuthContext);
-    const { language: language } = useContext(LanguageContext);
+    const { language: language, setLanguage: setLanguage } = useContext(LanguageContext);
 
     useEffect(() => {
         const createBackendConnection = async () => {
@@ -182,12 +185,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         return '#' + newColor.toString(16);
     }
 
-    const FileNameHeader = <>
-
-    </>
-
-
-
     return (
         <div className="code-editor-container">
             <div className={`${isMinimal ? 'hidden' : 'visible'}  editor-navbar-container`}>
@@ -216,7 +213,33 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         backgroundColor: backgroundColor,
                                         color: darkenHexColor(backgroundColor, 70),
                                     }}>
-                                    <p className="file-title-type" style={LanguageThemeMap[language]}>{language}</p>
+                                    <Menu
+                                        //TODO, when signed in, can change the language and will create new file
+                                        disabled={isSignedIn}
+                                        position="right"
+                                        transitionProps={{ transition: 'scale-x', duration: 120, exitDuration: 10 }}
+                                        offset={0}
+                                        styles={{
+                                            dropdown: { backgroundColor: 'transparent', padding: '0', borderColor: 'transparent', display: 'flex', justifyContent: 'center' },
+                                            item: {
+                                                padding: '0.15em 0.35em',
+                                                backgroundColor: 'transparent',
+                                                fontWeight: 800,
+                                                fontSize: '8pt',
+                                                letterSpacing: '0.04em',
+                                                marginLeft: '0.4em',
+                                            },
+                                        }}
+                                    >
+                                        <Menu.Target>
+                                            <div className="file-title-type" style={LanguageThemeMap[language]}>{language}</div>
+                                        </Menu.Target>
+                                        <Menu.Dropdown>
+                                            {Languages.filter(lang => lang != language).map((lang: string, idx: number) =>
+                                                <Menu.Item key={idx} component="div" style={LanguageThemeMap[lang]} onClick={() => setLanguage(lang)}>{lang}</Menu.Item>
+                                            )}
+                                        </Menu.Dropdown>
+                                    </Menu>
                                     {
                                         (isSignedIn && fileTitle != "") &&
                                         <p className="file-title-name">
@@ -255,8 +278,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                         collapseLeftPanel
                     />
                 </FileContext.Provider>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

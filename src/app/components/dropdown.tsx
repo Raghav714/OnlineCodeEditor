@@ -20,6 +20,11 @@ interface DropdownProps {
 
     /**
      * The options the dropdown will display
+     * @example 
+     *   actions={[
+     *      { tag: "Rename", action: handleRename },
+     *      { tag: "Delete", action: toggleConfirmDelete },
+     *   ]}
      */
     actions: ActionItem[];
 

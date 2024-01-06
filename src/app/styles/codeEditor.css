@@ -80,7 +80,16 @@
     background-color: transparent;
     padding: 0.15em 0.35em;
     border-radius: 4px;
+    cursor: pointer;
 }
+
+/* .language-dropdown-menu > div:not(:first-child):not(:last-child){
+  margin-bottom: 0em;
+} */
+/* .language-dropdown-item{
+    margin-bottom: 0.3em;
+} */
+
 
 
 
