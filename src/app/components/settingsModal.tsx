@@ -65,9 +65,11 @@ const Settings: React.FC<SettingsProps> = ({ isOpen, setIsOpen }) => {
                     <div className="theme-dropdown-container">
                         <label htmlFor="language-select">Switch {isSignedIn && 'Default'} Language: </label>
                         <select className="theme-dropdown" id="language-select" value={isSignedIn ? defaultLanguage : language} onChange={handleLanguageChange}>
-                            <option value="python">Python</option>
-                            <option value="cpp">C++</option>
-                            <option value="java">Java</option>
+                            {
+                                Languages.map((lang: string, idx: number) => (
+                                    <option key={idx} value={lang}>{lang == "cpp" ? "C++" : lang.charAt(0).toUpperCase() + lang.slice(1)}</option>
+                                ))
+                            }
                         </select>
                     </div>
                     <button className="submit-button" onClick={handleToggleMinimal}>Toggle Minimal Mode</button>

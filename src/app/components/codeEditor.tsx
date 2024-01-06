@@ -5,7 +5,7 @@ import { LayoutContext, ThemeContext, AuthContext, FileContext, LanguageContext 
 import { python } from "@codemirror/lang-python";
 import { LanguageThemeMap, LanguageDefaultCode, Languages } from "../resources/languages";
 import { ThemeMap } from "../resources/themes";
-import { saveCodeFile } from "../resources/pocketbase";
+import { saveCodeFile, addCodeFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
 import Resizable from "./resizable";
 import Dropdown from "./dropdown";
@@ -60,8 +60,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [fileId, setFileId] = useState<string>("");
     const [fileTitle, setFileTitle] = useState<string>("");
     const [showSavedDisplay, setShowSavedDisplay] = useState<boolean>(false);
+    const [showLangDropdown, setShowLangDropdown] = useState<boolean>(false);
     const saveTimer = useRef<NodeJS.Timeout | null>(null);
-    const [showLanguageDropdown, setShowLanguageDropdown] = useState<boolean>(false);
 
 
     //Contexts 
@@ -73,6 +73,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const { value: theme, backgroundColor: backgroundColor, textColor: textColor } = useContext(ThemeContext);
     const { isSignedIn: isSignedIn } = useContext(AuthContext);
     const { language: language, setLanguage: setLanguage } = useContext(LanguageContext);
+
 
     useEffect(() => {
         const createBackendConnection = async () => {
@@ -185,6 +186,19 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         return '#' + newColor.toString(16);
     }
 
+
+    const handleLangDropdownClick = async (lang: string) => {
+        setLanguage(lang);
+        if (isSignedIn) {
+
+            const newFile = await addCodeFile(`New${lang.charAt(0).toUpperCase() + lang.slice(1)}File`, lang);
+            if (newFile) {
+                setFileId(newFile.id);
+                setFileTitle(newFile.title);
+                setCode(LanguageDefaultCode[lang]);
+            }
+        }
+    }
     return (
         <div className="code-editor-container">
             <div className={`${isMinimal ? 'hidden' : 'visible'}  editor-navbar-container`}>
@@ -214,8 +228,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         color: darkenHexColor(backgroundColor, 70),
                                     }}>
                                     <Menu
-                                        //TODO, when signed in, can change the language and will create new file
-                                        disabled={isSignedIn}
+                                        onChange={setShowLangDropdown}
                                         position="right"
                                         transitionProps={{ transition: 'scale-x', duration: 120, exitDuration: 10 }}
                                         offset={0}
@@ -227,7 +240,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                                 fontWeight: 800,
                                                 fontSize: '8pt',
                                                 letterSpacing: '0.04em',
-                                                marginLeft: '0.4em',
+                                                marginLeft: '0.45em',
                                             },
                                         }}
                                     >
@@ -236,12 +249,12 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         </Menu.Target>
                                         <Menu.Dropdown>
                                             {Languages.filter(lang => lang != language).map((lang: string, idx: number) =>
-                                                <Menu.Item key={idx} component="div" style={LanguageThemeMap[lang]} onClick={() => setLanguage(lang)}>{lang}</Menu.Item>
+                                                <Menu.Item key={idx} component="div" style={LanguageThemeMap[lang]} onClick={() => handleLangDropdownClick(lang)}>{lang}</Menu.Item>
                                             )}
                                         </Menu.Dropdown>
                                     </Menu>
                                     {
-                                        (isSignedIn && fileTitle != "") &&
+                                        (isSignedIn && fileTitle != "" && !showLangDropdown) &&
                                         <p className="file-title-name">
                                             {showSavedDisplay ? fileTitle : 'Saving...'}
                                         </p>

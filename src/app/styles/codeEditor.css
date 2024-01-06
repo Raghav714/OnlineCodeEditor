@@ -11,7 +11,7 @@
 
 .run-code-button {
     background-color: rgb(63, 69, 243);
-    padding: 0.6em 1.2em;
+    padding: 0.5em 1.2em;
     border-radius: 3px;
     margin-right: 1em;
 
@@ -65,6 +65,7 @@
     padding: 0.3em 0.2em 0.3em 0.2em;
     background-color: transparent;
     letter-spacing: 0.025em;
+    height: 2.1em;
 }
 
 .file-title-name {
@@ -83,28 +84,18 @@
     cursor: pointer;
 }
 
-/* .language-dropdown-menu > div:not(:first-child):not(:last-child){
-  margin-bottom: 0em;
-} */
-/* .language-dropdown-item{
-    margin-bottom: 0.3em;
-} */
 
 
 
 
 .sidemirror-container {
     height: 100%;
-
     display: flex;
     flex-direction: column;
     padding-top: 0.4em;
     text-align: center;
     border-right: 1px solid black;
-
-
     position: relative;
-    /* overflow-x: hidden; */
 }
 
 

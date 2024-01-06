@@ -3,7 +3,7 @@ const Languages: string[] = ['python', 'java', 'cpp']
 const LanguageMap: { [key: string]: string } = {
     'py': 'python',
     'cpp': 'cpp',
-    'java': 'java'
+    'java': 'java',
 }
 
 
@@ -14,8 +14,8 @@ type Theme = {
 };
 const LanguageThemeMap: { [key: string]: Theme } = {
     'python': {
-        color: '#668966',
-        border: '1px solid #668966',
+        color: '#609160',
+        border: '1px solid #609160',
 
     },
     'java': {
@@ -32,8 +32,8 @@ const LanguageThemeMap: { [key: string]: Theme } = {
 
 const LanguageDefaultCode: { [key: string]: string } = {
     'java': '\nclass Main {\n\tpublic static void main(String[] args){\n\t\tSystem.out.println(\"Hello World\");\n\t}\n}\n',
-    'cpp': '#include <iostream>\n\nint main() {\n\tstd:: cout << "HelloWorld" << std:: endl;\n\treturn 0;\n}\n',
-    'python': ''
+    'cpp': '#include <iostream>\nusing namespace std;\n\nint main() {\n\tstd:: cout << "HelloWorld" << std:: endl;\n\treturn 0;\n}\n',
+    'python': '',
 }
 
 
