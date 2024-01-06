@@ -1,16 +1,29 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin } from '@uiw/react-codemirror';
+import CodeMirror, { keymap, Command, EditorView, Decoration, ViewPlugin, Extension } from '@uiw/react-codemirror';
 import { Menu, Button, Text, rem } from '@mantine/core';
 import { LayoutContext, ThemeContext, AuthContext, FileContext, LanguageContext } from "../resources/contexts";
 import { python } from "@codemirror/lang-python";
+import { cpp } from "@codemirror/lang-cpp";
+import { hyperLink, hyperLinkExtension, hyperLinkStyle } from '@uiw/codemirror-extensions-hyper-link';
 import { LanguageThemeMap, LanguageDefaultCode, Languages } from "../resources/languages";
-import { ThemeMap } from "../resources/themes";
+import { ThemeMap, ThemeBackgroundMap } from "../resources/themes";
 import { saveCodeFile, addCodeFile } from "../resources/pocketbase";
 import Sidebar from "./sidebar";
 import Resizable from "./resizable";
-import Dropdown from "./dropdown";
 import "../styles/codeEditor.css"
 
+
+export const hyperLinkShortcut: Extension = [
+    hyperLinkExtension({
+        regexp: /Hyper/gi,
+        match: { Hyper: 'https://google.com' },
+        handle: (value, input, from, to) => {
+            if (value === 'Hyper') return 'https://google.com';
+            return value;
+        },
+    }),
+    hyperLinkStyle,
+];
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -61,6 +74,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const [fileTitle, setFileTitle] = useState<string>("");
     const [showSavedDisplay, setShowSavedDisplay] = useState<boolean>(false);
     const [showLangDropdown, setShowLangDropdown] = useState<boolean>(false);
+    const [linkIconColor, setLinkIconColor] = useState<string>("#FFFFFF")
     const saveTimer = useRef<NodeJS.Timeout | null>(null);
 
 
@@ -74,8 +88,23 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     const { isSignedIn: isSignedIn } = useContext(AuthContext);
     const { language: language, setLanguage: setLanguage } = useContext(LanguageContext);
 
+    const hyperLinkCustomStyle = EditorView.theme({
+        '.cm-hyper-link-icon': {
+            display: 'inline-block',
+            verticalAlign: 'middle',
+            marginLeft: '0.2ch',
+            color: linkIconColor,
+        },
+        '.cm-hyper-link-icon svg': {
+            display: 'block'
+        },
+        '.cm-hyper-link-underline': {
+            textDecoration: 'underline'
+        }
+    });
 
     useEffect(() => {
+        console.log(ThemeBackgroundMap[theme])
         const createBackendConnection = async () => {
             try {
                 await fetch(`${NEXT_PUBLIC_API_URL}`);
@@ -85,6 +114,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         }
         createBackendConnection();
     }, [])
+
+    useEffect(() => {
+        setLinkIconColor(ThemeBackgroundMap[theme].foreground)
+    }, [theme])
 
     useEffect(() => {
         if (!isSignedIn) {
@@ -176,6 +209,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
         setIsSidebarOpen(!isSidebarOpen)
     }
 
+
     function darkenHexColor(col: string, amt: number): string {
         col = col.slice(1);
         var num = parseInt(col, 16);
@@ -265,10 +299,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                     value={code}
                                     onChange={setCode}
                                     extensions={[
-                                        python(),
+                                        (language == "python") ? python() : cpp(),
+                                        // hyperLinkShortcut,
+                                        [hyperLinkExtension(), hyperLinkCustomStyle],
+                                        // hyperLink,
                                         bracketSpacingPlugin(),
                                         customKeymap,
-                                        EditorView.lineWrapping
+                                        EditorView.lineWrapping,
+
                                     ]}
                                     height="100%"
                                     theme={ThemeMap[theme]}
@@ -278,6 +316,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                         tabSize: 5,
                                     }}
                                     autoFocus
+
                                 />
                             </div>
                         }

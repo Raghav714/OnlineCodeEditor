@@ -73,12 +73,14 @@ async function logout() {
 async function saveCodeFile(fileId: string, pyCode: string) {
     if (!pb.authStore.isValid)
         return null;
-
-    const record = await pb.collection('python_files').update(fileId, {
-        code: pyCode,
-    });
-    return record;
-
+    try {
+        const record = await pb.collection('python_files').update(fileId, {
+            code: pyCode,
+        });
+        return record;
+    } catch (error) {
+        console.error('Error saving file', error);
+    }
 }
 
 async function getCodeFiles() {
