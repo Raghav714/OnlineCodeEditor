@@ -1,3 +1,4 @@
+# gcloud id: onlinecodeeditor-409504
 # Start from a Node.js base image
 FROM node:18
 
@@ -16,6 +17,8 @@ RUN apt-get install -y g++
 
 # Install default JDK for Java compilation and execution
 RUN apt-get install -y default-jdk
+
+RUN apt-get install -y lldb
 
 # Copy the rest of your application's code
 COPY . .
