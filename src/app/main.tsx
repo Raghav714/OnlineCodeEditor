@@ -14,8 +14,13 @@ import SettingsIcon from './assets/settings-icon.png';
 import AccountIcon from './assets/account-icon.png';
 import './styles/main.css';
 
+type outputType = {
+    time: string,
+    output: string
+}
+
 const Home: React.FC = () => {
-    const [consoleOutput, setConsoleOutput] = useState<string>("");
+    const [consoleOutput, setConsoleOutput] = useState<outputType>({ time: "", output: "" });
     const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
     const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
     const [isLogoutOpen, setIsLogoutOpen] = useState<boolean>(false);
@@ -48,7 +53,7 @@ const Home: React.FC = () => {
             }
             if (e.key === 'd' && e.shiftKey && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
-                setConsoleOutput("");
+                setConsoleOutput({ time: "", output: "" });
             }
             if (e.key === 'o' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
@@ -95,7 +100,7 @@ const Home: React.FC = () => {
     const handleLogout = () => {
         setIsLogoutOpen(false);
         setIsSignedIn(false);
-        setConsoleOutput("");
+        setConsoleOutput({ time: "", output: "" });
         setDefaultLanguage("python");
         logout();
     }
@@ -145,7 +150,7 @@ const Home: React.FC = () => {
                             <div className="main-inner-container">
                                 <Resizable
                                     leftPanel={<CodeEditor setOutput={setConsoleOutput} />}
-                                    rightPanel={<Console output={consoleOutput} />}
+                                    rightPanel={<Console time={consoleOutput.time} output={consoleOutput.output} />}
                                     draggerWidth={4}
                                     draggerColor="#7E4B0E"
                                 />

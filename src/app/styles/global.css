@@ -55,6 +55,12 @@
   display: flex;
 }
 
+.file-title-style {
+    font-style: italic;
+    font-size: 13pt;
+    margin-left: 0.8em;
+}
+
 
 .dull {
   filter: brightness(90%)

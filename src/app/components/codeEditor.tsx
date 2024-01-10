@@ -13,23 +13,13 @@ import Resizable from "./resizable";
 import "../styles/codeEditor.css"
 
 
-export const hyperLinkShortcut: Extension = [
-    hyperLinkExtension({
-        regexp: /Hyper/gi,
-        match: { Hyper: 'https://google.com' },
-        handle: (value, input, from, to) => {
-            if (value === 'Hyper') return 'https://google.com';
-            return value;
-        },
-    }),
-    hyperLinkStyle,
-];
 
 const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const bracketSpacing = Decoration.mark({
     class: 'cm-bracket-spacing'
 });
+
 
 function bracketSpacingPlugin() {
     return ViewPlugin.fromClass(class {
@@ -64,7 +54,7 @@ function bracketSpacingPlugin() {
 }
 
 interface CodeEditorProps {
-    setOutput: (code: string) => void;
+    setOutput: ({ time, output }: { time: string, output: string }) => void;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
@@ -173,10 +163,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
     }, [language])
 
 
-
     const runCode = async () => {
         try {
-            setOutput("");
+            setOutput({ time: "", output: "" });
             let requestOptions = {
                 method: "POST",
                 headers: {
@@ -187,7 +176,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
             let response = await fetch(`${NEXT_PUBLIC_API_URL}/${language}`, requestOptions);
             let data = await response.json()
             if (data && data.output) {
-                setOutput(data.output);
+                console.log(data);
+                setOutput({ time: `${data.timeTaken} ms\n`, output: data.output });
             }
         } catch (error) {
             console.log(error);
@@ -289,7 +279,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                     </Menu>
                                     {
                                         (isSignedIn && fileTitle != "" && !showLangDropdown) &&
-                                        <p className="file-title-name">
+                                        <p className="file-title-style">
                                             {showSavedDisplay ? fileTitle : 'Saving...'}
                                         </p>
                                     }
@@ -300,9 +290,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ setOutput }) => {
                                     onChange={setCode}
                                     extensions={[
                                         (language == "python") ? python() : cpp(),
-                                        // hyperLinkShortcut,
                                         [hyperLinkExtension(), hyperLinkCustomStyle],
-                                        // hyperLink,
                                         bracketSpacingPlugin(),
                                         customKeymap,
                                         EditorView.lineWrapping,

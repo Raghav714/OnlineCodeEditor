@@ -5,13 +5,15 @@ import { ThemeMap } from "../resources/themes";
 import '../styles/console.css';
 
 interface ConsoleOutputProps {
+    time: string,
     output: string
 }
-const Console: React.FC<ConsoleOutputProps> = ({ output }) => {
+const Console: React.FC<ConsoleOutputProps> = ({ time, output }) => {
     const { value: theme, textColor: textColor } = useContext(ThemeContext);
 
     return (
         <div className="console-container">
+            <div className="file-title-style" style={{ color: textColor, fontSize: '11pt' }}>{time}</div>
             <CodeMirror
                 className="console"
                 value={output}
