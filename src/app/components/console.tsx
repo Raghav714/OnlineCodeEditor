@@ -13,7 +13,7 @@ const Console: React.FC<ConsoleOutputProps> = ({ time, output }) => {
 
     return (
         <div className="console-container">
-            <div className="file-title-style" style={{ color: textColor, fontSize: '11pt' }}>{time}</div>
+            <div className="file-title-style" style={{ color: textColor, fontSize: '10pt' }}>{time}</div>
             <CodeMirror
                 className="console"
                 value={output}

@@ -1,5 +1,11 @@
 .console-container {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.file-title-style{
+    flex-shrink: 1;
 }
 
 .console {
